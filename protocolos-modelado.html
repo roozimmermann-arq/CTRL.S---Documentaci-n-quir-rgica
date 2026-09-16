@@ -1,0 +1,242 @@
+<meta charset="utf-8">
+<title>Protocolos de modelado · Ctrl.S</title>
+<style>
+  :root{--papel:#f4f3ef;--tinta:#1a1a1a;--azul:#1E2A78;--arq:#bbd0ea;--est:#c9b7d6;--linea:#8a8a8a;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.4;padding:32px 22px 70px}
+  .wrap{max-width:1080px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;color:#555;font-size:13px;letter-spacing:.03em}
+  header.doc h1{font-size:27px;font-weight:600;margin:2px 0 0}
+  header.doc .sub{font-size:13px;color:#555;margin-top:5px;max-width:840px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:#f2e2c0;border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  a{color:var(--azul)}
+
+  .indice{background:#fff;border:1px solid #cbd2e6;border-radius:10px;padding:16px 20px;margin-bottom:26px}
+  .indice h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--azul);margin-bottom:10px}
+  .indice ol{list-style:none;counter-reset:i;display:grid;grid-template-columns:repeat(2,1fr);gap:4px 24px}
+  @media(max-width:640px){.indice ol{grid-template-columns:1fr}}
+  .indice li{counter-increment:i;font-size:13.5px;padding:3px 0}
+  .indice li::before{content:counter(i)".";color:#999;font-weight:700;margin-right:8px}
+  .indice a{text-decoration:none;border-bottom:1px solid #cdd4ee}
+  .indice .t{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
+  .t.arq{background:var(--arq);color:#1b3a63}.t.est{background:var(--est);color:#4a2f5e}
+
+  .proto{background:#fff;border:1px solid #ddd7c8;border-radius:10px;padding:18px 20px;margin-bottom:20px;scroll-margin-top:14px;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+  .ph{display:flex;align-items:center;gap:10px;border-bottom:1px solid #eee6d6;padding-bottom:10px;margin-bottom:12px}
+  .ph h2{font-size:17px;font-weight:600;color:#1a1a1a}
+  .disc-tag{font-size:10px;font-weight:800;letter-spacing:.05em;padding:3px 9px;border-radius:5px}
+  .disc-tag.arq{background:var(--arq);color:#1b3a63}.disc-tag.est{background:var(--est);color:#4a2f5e}
+  .totop{margin-left:auto;font-size:11px;color:#888;text-decoration:none;border:1px solid #ddd;border-radius:5px;padding:3px 9px}
+
+  table.steps{border-collapse:collapse;width:100%;font-size:12.5px}
+  table.steps th,table.steps td{border:1px solid #ece7da;padding:6px 9px;text-align:left;vertical-align:top}
+  table.steps thead th{background:#f3f1ea;font-size:11px;font-weight:600}
+  table.steps td.n{text-align:center;color:#999;width:30px;font-weight:600}
+  table.steps td.act{font-weight:600;width:210px}
+  table.steps td.chk{width:34px;text-align:center}
+  table.steps td.chk input{width:15px;height:15px;cursor:pointer}
+  .note{background:#faf6ea;border:1px solid #e3d3a2;border-left:4px solid #c99a2e;border-radius:6px;padding:10px 14px;font-size:12px;color:#5a4a1a;margin-top:12px}
+  .note b{color:#7a4a1a}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @page{margin:12mm}
+  @media print{
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    body{background:#fff;padding:0}
+    .proto{box-shadow:none}
+    table.steps tr{break-inside:avoid}
+    .ph{break-after:avoid}
+    .indice{break-inside:avoid}
+    .totop{display:none}
+  }
+</style>
+
+<div class="wrap" id="top">
+  <header class="doc">
+    <span class="kick">/ protocolos de modelado — instructivo operativo (Revit)</span>
+    <h1>Protocolos de modelado</h1>
+    <div class="sub">El «cómo» paso a paso de cada elemento, para quien modela en Revit. Cubre <strong>ARQ y EST</strong> (MEP pendiente). Tildá cada paso a medida que lo hacés — <em>los tildes se guardan en este navegador</em>.</div>
+    <span class="badge">Extraído del Excel de protocolos · a validar</span>
+  </header>
+
+  <div class="indice">
+    <h2>Índice — orden de modelado</h2>
+    <ol>
+      <li><a href="#muros">Muros no estructurales</a><span class="t arq">ARQ</span></li>
+      <li><a href="#solados">Solados</a><span class="t arq">ARQ</span></li>
+      <li><a href="#rcp">Cielorrasos (RCP)</a><span class="t arq">ARQ</span></li>
+      <li><a href="#rete">Revestimientos y terminaciones</a><span class="t arq">ARQ</span></li>
+      <li><a href="#carp">Carpinterías</a><span class="t arq">ARQ</span></li>
+      <li><a href="#bases">Bases / Fundaciones</a><span class="t est">EST</span></li>
+      <li><a href="#coltab">Columnas y tabiques</a><span class="t est">EST</span></li>
+      <li><a href="#vigaslosas">Vigas y losas</a><span class="t est">EST</span></li>
+    </ol>
+    <div style="font-size:11.5px;color:#777;margin-top:10px">Luego: parámetros ARQ/EST (diccionario), protocolo SD y masters de documentación — pendientes de sumar si querés.</div>
+  </div>
+
+  <!-- 1 MUROS -->
+  <section id="muros" class="proto">
+    <div class="ph"><span class="disc-tag arq">ARQ</span><h2>1 · Muros no estructurales</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Abrir herramienta de trabajo</td><td>Revit.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Abrir archivo de trabajo asignado</td><td>Desde arriba a la izquierda «OPEN» y buscar la ruta del nivel: BMO\PROJECT\MODEL\SISTEMAS\ARQ\PNN</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Armar escenario de trabajo</td><td>Planta + CAD para modelar. ARQ-EXPORT DWF para ver elementos de exportación en 3D; de ser necesario, una sección para ver alturas.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Ajuste de info en el view de CAD</td><td>En la View del nivel + CAD, ajustar la visualización de los layer del CAD vinculado (Master-Piso-PNN) desde Import Categories.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Identificar dimensión</td><td>Dimensión del muro núcleo y el filo a respetar. Si no existe, duplicar y crear en DATABASE con el espesor del ladrillo u hormigón. Si no se sabe la composición, muro genérico por espesor total. <b>No cambiar nombre a ladrillo/hormigón, sólo el espesor.</b></td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Parámetro Estructura</td><td>Tipo de muro en propiedades → edit type → verificar que esté <b>destildado</b> M&CoEstructural.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Justificación del muro</td><td>Instancia → constraint → location line: «wall center line» para internos y «finish face exterior» para perimetrales.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">8</td><td class="act">Top/Base Constraint</td><td>De nivel estructural a nivel estructural.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">9</td><td class="act">Modelado</td><td>Modelar tramo de muro siguiendo la info de CAD.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">10</td><td class="act">Offset</td><td>Si un muro lleva offset (inferior o superior), consultar al coordinador si se contempló en la preparación de niveles o si debe aplicarse.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">11</td><td class="act">Chequeo general</td><td>Desde el 3D, seleccionar todo lo modelado, filtrar sólo muros y revisar que estén de EST a EST y con la justificación correspondiente.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">12</td><td class="act">Intercambio de muro total por núcleo + terminación</td><td>Según el espesor del mampuesto o terminación y revestimiento.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">13</td><td class="act">Parámetros</td><td>Completar los parámetros de instancia correspondientes.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- 2 SOLADOS -->
+  <section id="solados" class="proto">
+    <div class="ph"><span class="disc-tag arq">ARQ</span><h2>2 · Solados</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Armar escenario de trabajo</td><td>PNN - NP/DOWN + CAD para modelar; EXPORT DWF para ver en 3D; de ser necesario, un corte para ver alturas.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Identificar dimensión</td><td>Desde un corte se identifica el espesor; también desde las referencias del CAD. Si no hay info, consultar al coordinador en qué espesor se modela.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Seleccionar tipo</td><td>Architecture → Floor. Contrapiso: siglas cont_ + TE_ y el espesor medido. Si falta el espesor, duplicar desde edit type, renombrar con el espesor y modificarlo en el renglón structure.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Parámetro Estructura</td><td>Verificar en edit type que esté destildado M&CoEstructural.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Seleccionar nivel</td><td>Referenciar todos los solados al NPT.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Modelado</td><td>Sketch del solado del local con «pick walls». Sin muros, seguir el sketch del DRAFT.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Parámetros</td><td>Completar los parámetros de instancia correspondientes.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- 3 RCP -->
+  <section id="rcp" class="proto">
+    <div class="ph"><span class="disc-tag arq">ARQ</span><h2>3 · Cielorrasos (RCP)</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Armar escenario de trabajo</td><td>Cielorraso - NP/DOWN + CAD; EXPORT DWF para ver en 3D; corte si hace falta ver alturas.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Ajuste de la info en la planta de CAD</td><td>En la View de Control + CAD, ajustar los layer del CAD (Master Piso) desde Import Categories.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Identificar espesor</td><td>Desde un corte o referencias del CAD. Si no hay info, consultar al coordinador.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Seleccionar tipo</td><td>Architecture → Ceilings → sketch ceiling. Aplicado o suspendido. Si falta el espesor, duplicar y renombrar. Sigla: <b>CS_ESPESOR</b> (suspendido), <b>CA_ESPESOR</b> (aplicado).</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Seleccionar nivel</td><td>Referenciar el cielorraso a nivel de Ceiling. Con diferencias de nivel, asignar el offset correspondiente.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Modelado</td><td>Sketch del cielorraso con «pick walls». Sin muros, seguir el DRAFT.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Parámetros</td><td>Completar los parámetros de instancia correspondientes.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- 4 RE + TE -->
+  <section id="rete" class="proto">
+    <div class="ph"><span class="disc-tag arq">ARQ</span><h2>4 · Revestimientos y terminaciones de muros</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Armar escenario de trabajo</td><td>PNN - NP/DOWN + CAD; EXPORT DWF para 3D; corte si hace falta.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Identificar dimensión</td><td>Espesor desde corte o referencias del CAD. Si no hay info, consultar al coordinador.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Seleccionar tipo</td><td>Architecture → Floor. Siglas cont_ + TE_ y el espesor. Si falta, duplicar y renombrar.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Parámetro Estructura</td><td>Verificar destildado M&CoEstructural.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Justificación</td><td>Propiedades → constraint → location line: «finish face interior».</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Top/Base Constraint</td><td>Interiores: de NPT a nivel de Ceiling o a la parte inferior de la losa. Exteriores: de nivel de EST a nivel de EST.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Modelado</td><td>Modelar terminaciones y revestimientos siguiendo el CAD.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">8</td><td class="act">Alinear y colocar candado</td><td>Con Align, alinear los revestimientos del filo interior a la terminación con el filo exterior del muro.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">9</td><td class="act">Restricción</td><td>Colocar restricción (candado) entre la terminación y el revestimiento.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">10</td><td class="act">Join</td><td>Modify → Join → Join Geometry: primero el muro, luego la terminación y/o revestimiento.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- 5 CARPINTERÍAS -->
+  <section id="carp" class="proto">
+    <div class="ph"><span class="disc-tag arq">ARQ</span><h2>5 · Carpinterías</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Armar escenario de trabajo</td><td>PNN - NP/DOWN + CAD; EXPORT DWF para 3D; corte si hace falta.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Identificar dimensión</td><td>Si el CAD tiene detalle de dimensiones, usarlo. Como genérico, puertas de 2.00 m y el ancho medido en planta.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Seleccionar tipo (puertas)</td><td>Architecture → Door. Si falta el tamaño, duplicar desde edit type, renombrar con alto y ancho y cambiar height/width.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Seleccionar nivel</td><td>Siempre referenciar al NPT.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Offset</td><td>Si en planta hay desnivel, colocar la altura indicada en offset.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Modelado</td><td>Colocar la puerta sobre el muro correspondiente.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Verificar posición</td><td>Desde un corte, revisar la altura correcta.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">8</td><td class="act">Seleccionar tipo (ventanas)</td><td>Architecture → Window. Si falta el tipo, consultar al coordinador del proyecto.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">9</td><td class="act">Seleccionar nivel</td><td>Siempre referenciar al NPT.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">10</td><td class="act">Offset</td><td>Si hay desnivel, colocar la altura en offset. Sin definición, a 0,85 del NPT.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">11</td><td class="act">Modelado</td><td>Colocar la ventana sobre el muro correspondiente.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">12</td><td class="act">Verificar posición</td><td>Desde un corte, revisar la altura correcta.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- 6 BASES -->
+  <section id="bases" class="proto">
+    <div class="ph"><span class="disc-tag est">EST</span><h2>6 · Bases / Fundaciones</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Preparación de niveles</td><td>Copy Monitor para todos los niveles, vinculados al modelo de referencia y alineados (View de Niveles vs DATUM).</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Preparación de niveles</td><td>Usar un único nivel de fundación donde apoyan la mayor cantidad de bases y luego desfases. No crear múltiples niveles de fundación.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Preparación de niveles</td><td>FUND = nivel inferior de las bases; ES-S/FUND = nivel superior de las losas de fundación (verificar carga hasta el NPT del SS correspondiente).</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Cargar estándares del proyecto</td><td>Transfer Project Standards desde DATABASE EST para aplicar plantillas, estilos y parámetros estándar.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Tipos de elementos</td><td>Usar el DESIGN CENTER DE ESTRUCTURA para traer las familias. Nunca traer familias de otros proyectos. Si falta alguna, solicitarla a Tecnología del proyecto.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Tipos de elementos (reglas)</td><td>Zapata corrida: Structural Foundation, no Floor. Walls: sólo TA_ESPESOR. Losas: sólo LO_ESPESOR. Vigas y bases: según DC (Design Center).</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Parámetros obligatorios</td><td>Ver el protocolo de parámetros (en el Excel) y completar.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">8</td><td class="act">Revisión según parámetros</td><td>Ver el protocolo de revisión (en el Excel) y completar.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">9</td><td class="act">Export DWF</td><td>Exportar a DWF en la carpeta de coordinación y guardar.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- 7 COLUMNAS Y TABIQUES -->
+  <section id="coltab" class="proto">
+    <div class="ph"><span class="disc-tag est">EST</span><h2>7 · Columnas y tabiques</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Abrir herramienta de trabajo</td><td>Revit.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Abrir archivo asignado</td><td>«OPEN» → ruta del nivel: BMO\PROJECT\MODEL\SISTEMAS\EST\PNN</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Armar escenario de trabajo</td><td>EST (ST/UP) + CAD. EST-EXPORT DWF para 3D; sección para alturas. Agregar grilla estructural desde datum.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Ajuste de info en el view de CAD</td><td>Ajustar layer del CAD (Master-Piso-PNN) desde Import Categories. Alinear con candado columnas y muros a grilla.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Identificar dimensión (tabiques)</td><td>Identificar el espesor del muro. Pinear todo.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Modelar muro estructural</td><td>Solapa Wall → Structural Wall.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Seleccionar tipo</td><td>Muro estructural: siglas TA_ y el espesor medido. Si falta, duplicar desde edit type, renombrar y cambiar el espesor en structure.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">8</td><td class="act">Parámetro estructura</td><td>En edit type, verificar que las familias tengan <b>tildado</b> M&Co Estructural.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">9</td><td class="act">Justificación central</td><td>Justificación: Wall Centerline.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">10</td><td class="act">Top/Base Constraint</td><td>De nivel estructural a nivel estructural — ES/PNN.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">11</td><td class="act">Modelado</td><td>Modelar tramo de muro siguiendo el CAD.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">12</td><td class="act">Identificar dimensión (columnas + capiteles)</td><td>Identificar la dimensión observando el CAD.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">13</td><td class="act">Seleccionar tipo</td><td>Columna HA o columnas asociadas al capitel.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">14</td><td class="act">Top/Base Constraint</td><td>De nivel estructural a nivel estructural — ES/PNN.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">15</td><td class="act">Colocar las dimensiones</td><td>Propiedades → dimensiones: adaptar las medidas de la columna al CAD.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">16</td><td class="act">Modelado</td><td>Colocar la columna con la función AT GRID donde corresponda.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">17</td><td class="act">Parámetros</td><td>Completar los parámetros de instancia correspondientes.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">18</td><td class="act">Pinear o bloquear posición</td><td>Seleccionar todas las columnas y muros y pinear todo.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">19</td><td class="act">Modificaciones</td><td>Ante una modificación de la estructura del asesor, incluir <b>MODIFICACIÓN</b> en el parámetro «Comments» para poder filtrar al documentar lo que CTRLS modificó.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">20</td><td class="act">Tags</td><td>Al etiquetar en el mark (según planos del asesor), armar y usar un schedule de elementos estructurales; en la otra pantalla el EXPORT DWF. Etiquetar y Enter para pasar al siguiente.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">21</td><td class="act">Export DWF</td><td>Ctrl + Shift + E y guardar en la carpeta correspondiente.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+    <div class="note"><b>Revisión master (control previo a documentar).</b> Todos los elementos estructurales deben tener completos <b>Manufactura, Notas y Comments</b>. Manufactura: siempre <b>HA</b> (sin excepción). Notas según función: <b>FUN</b> (vigas/losas de fundación), <b>SUB</b> (columnas/tabiques de submuración), <b>EXTRA-POZO</b>, <b>EXTRA-TANQUE</b>, <b>SUB-PILETA</b>. Comments: <b>MOD</b> si el elemento fue modificado respecto del planteo del estructuralista.</div>
+  </section>
+
+  <!-- 8 VIGAS Y LOSAS -->
+  <section id="vigaslosas" class="proto">
+    <div class="ph"><span class="disc-tag est">EST</span><h2>8 · Vigas y losas</h2><a href="#top" class="totop">↑ índice</a></div>
+    <table class="steps"><thead><tr><th>#</th><th>Actividad</th><th>Descripción</th><th>✓</th></tr></thead><tbody>
+      <tr><td class="n">1</td><td class="act">Identificar dimensión (vigas)</td><td>Identificar la dimensión a modelar observando el CAD.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">2</td><td class="act">Seleccionar tipo</td><td>Viga HA, viga IPN o viga IPB.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">3</td><td class="act">Start – End Offset</td><td>Comienzo y final pueden tener alturas distintas. Para una viga horizontal a distinta altura del nivel, mismo offset en start y end; si no, queda inclinada.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">4</td><td class="act">Justificación</td><td>Eje Y: center. Eje Z: top (en general).</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">5</td><td class="act">Colocar las dimensiones</td><td>Propiedades → dimensiones: adaptar al CAD. No duplicar tipo.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">6</td><td class="act">Modelado</td><td>Modelar tramo siguiendo el CAD.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">7</td><td class="act">Identificar dimensión (losas)</td><td>Identificar el espesor de la losa.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">8</td><td class="act">Modelar losa estructural</td><td>Structure → Floor → Structural Floor (así se tilda el check de estructura de Revit).</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">9</td><td class="act">Seleccionar tipo</td><td>Losa estructural: siglas LO_ y el espesor. Si falta, duplicar, renombrar y cambiar el espesor en structure.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">10</td><td class="act">Parámetro estructura</td><td>Edit type: verificar tildado M&CoEstructural.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">11</td><td class="act">Nivel</td><td>Referenciar la losa al nivel estructural correspondiente (ES S/PNN).</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">12</td><td class="act">Posición vertical</td><td>Verificar en un corte que la posición sea la correcta.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">13</td><td class="act">Align losa – viga</td><td>Al hacer el sketch, alinearlo al filo exterior de la viga.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">14</td><td class="act">Restricción</td><td>Colocar candado entre el sketch de la losa y el filo exterior de la viga.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">15</td><td class="act">Parámetro estructura</td><td>Completar los parámetros de la instancia correspondientes.</td><td class="chk"><input type="checkbox"></td></tr>
+      <tr><td class="n">16</td><td class="act">Modificaciones</td><td>Ante una modificación del planteo del asesor, incluir <b>MODIFICACIÓN</b> en «Comments» para poder filtrar al documentar.</td><td class="chk"><input type="checkbox"></td></tr>
+    </tbody></table>
+  </section>
+
+  <footer class="doc">Ctrl.S · protocolos de modelado (ARQ + EST) — instructivo operativo</footer>
+</div>
+<script>
+  (function(){
+    var boxes = document.querySelectorAll('input[type=checkbox]');
+    boxes.forEach(function(b, i){
+      var key = 'proto-chk-' + i;
+      try { if (localStorage.getItem(key) === '1') b.checked = true; } catch(e){}
+      b.addEventListener('change', function(){
+        try { localStorage.setItem(key, b.checked ? '1' : '0'); } catch(e){}
+      });
+    });
+  })();
+</script>

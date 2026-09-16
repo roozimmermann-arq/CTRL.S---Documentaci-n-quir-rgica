@@ -1,0 +1,127 @@
+<meta charset="utf-8">
+<title>Hub de protocolos · Ctrl.S</title>
+<style>
+  :root{--papel:#f4f3ef;--tinta:#1a1a1a;--azul:#1E2A78;
+    --model:#bbd0ea;--cuant:#c7d8c0;--master:#e6cfa0;--cli:#d9cbe4;
+    --ok:#4E7A27;--proc:#C99A2E;--pend:#9a958a;--linea:#8a8a8a;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.4;padding:32px 22px 70px}
+  .wrap{max-width:1080px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;color:#555;font-size:13px;letter-spacing:.03em}
+  header.doc h1{font-size:28px;font-weight:600;margin:2px 0 0}
+  header.doc .sub{font-size:13px;color:#555;margin-top:5px;max-width:840px}
+  a{color:var(--azul)}
+
+  .map{background:#fff;border:1px solid #cbd2e6;border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:12.5px;color:#33406e}
+  .map b{color:var(--azul)}
+  .map .row{margin:4px 0}
+
+  .fam{margin-bottom:24px}
+  .fam-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .fam-h .dot{width:14px;height:14px;border-radius:4px}
+  .fam-h h2{font-size:18px;font-weight:600}
+  .fam-h .cnt{font-size:11px;color:#888;margin-left:auto}
+
+  table{border-collapse:collapse;width:100%;font-size:12.5px;background:#fff;border:1px solid #e0dccf;border-radius:8px;overflow:hidden}
+  th,td{border:1px solid #ece7da;padding:8px 11px;text-align:left;vertical-align:top}
+  thead th{background:#f3f1ea;font-size:11px;font-weight:600}
+  td.name{font-weight:600;width:230px}
+  td.st{width:96px;text-align:center;white-space:nowrap}
+  td.lk{width:150px}
+  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff;white-space:nowrap}
+  .b-ok{background:var(--ok)}.b-proc{background:var(--proc)}.b-pend{background:var(--pend)}
+  .lk a{display:inline-block;font-size:11px;text-decoration:none;border:1px solid #c4cdea;border-radius:5px;padding:2px 7px;margin:2px 3px 0 0;background:#eef1fb}
+  .lk a:hover{background:#dfe4fb}
+  .lk .none{font-size:11px;color:#aaa;font-style:italic}
+
+  .pend-list{background:#fff;border:1px solid #e3d3a2;border-radius:10px;padding:14px 18px}
+  .pend-list h2{font-size:14px;color:#8a6a2a;margin-bottom:8px}
+  .pend-list ul{padding-left:20px;font-size:12.5px;color:#5a4a1a}
+  .pend-list li{margin:4px 0}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ hub de protocolos — puerta de entrada</span>
+    <h1>Protocolos de Ctrl.S</h1>
+    <div class="sub">Índice de las tres familias de protocolos, su estado y sus enlaces (hoja del Excel maestro + anexo con imágenes). Reemplaza la hoja de ruta cruda.</div>
+  </header>
+
+  <div class="map">
+    <div class="row">🔵 <b>Modelado</b> → el «cómo» de las tareas de ARQ/EST (L1, L2, L4, L5).</div>
+    <div class="row">🟢 <b>Cuantificación</b> → el «cómo» de la fila <b>Cuantificaciones 5D</b> de la matriz (casilleros por disciplina) + las planillas In/Out de L2.</div>
+    <div class="row">🟠 <b>Armado de masters</b> → el «cómo» de la <b>Tarea 0</b> (armar masters) y de <b>L6 Documentación</b>.</div>
+  </div>
+
+  <!-- MODELADO -->
+  <div class="fam">
+    <div class="fam-h"><span class="dot" style="background:var(--model)"></span><h2>Modelado</h2><span class="cnt">ARQ + EST</span></div>
+    <table>
+      <thead><tr><th>Protocolo</th><th>Qué es</th><th>Estado</th><th>Enlaces</th></tr></thead>
+      <tbody>
+        <tr><td class="name">Modelado ARQ + EST</td><td>Instructivo Revit paso a paso: muros, solados, cielorrasos, revestimientos, carpinterías, bases, columnas/tabiques, vigas/losas.</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><a href="protocolos-modelado.html">Ver documento</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CUANTIFICACIÓN -->
+  <div class="fam">
+    <div class="fam-h"><span class="dot" style="background:var(--cuant)"></span><h2>Cuantificación</h2><span class="cnt">alimenta la matriz 5D</span></div>
+    <table>
+      <thead><tr><th>Protocolo</th><th>Qué es</th><th>Estado</th><th>Enlaces</th></tr></thead>
+      <tbody>
+        <tr><td class="name">Parámetros ARQ</td><td>Cómo completar los parámetros en el modelado ARQ (el diccionario que después filtra el master-cuantificación).</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><a href="https://docs.google.com/spreadsheets/d/1irv2Uw0s_0Qk9c0mdim66nBTaLRnuCn8/edit?gid=1800324593#gid=1800324593">Hoja</a><a href="https://docs.google.com/document/d/1CeavaBWvrZ8RwN38qAoWbAbp8nnZfcz-/edit">Anexo</a></td></tr>
+        <tr><td class="name">Protocolo SD</td><td>Paso del modelo SD al cómputo de albañilería (superficies).</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><a href="https://docs.google.com/spreadsheets/d/1irv2Uw0s_0Qk9c0mdim66nBTaLRnuCn8/edit?gid=1730449205#gid=1730449205">Hoja</a><a href="https://docs.google.com/document/d/1gWCbqXKcpyLlE_qbfLM-6xFcTK4P06XC/edit">Anexo</a></td></tr>
+        <tr><td class="name">Master-cuantificación CARP</td><td>Pasos para armar la planilla de carpinterías (sirve para pedir cotización).</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><a href="https://docs.google.com/spreadsheets/d/1irv2Uw0s_0Qk9c0mdim66nBTaLRnuCn8/edit?gid=1128570062#gid=1128570062">Hoja</a><a href="https://docs.google.com/document/d/1IC2fi5jko5II-Slf8cdMqazD3iqGFF6I/edit">Anexo</a></td></tr>
+        <tr><td class="name">Master-cuantificación por sistema</td><td>Schedules por sistema con lo que piden los clientes: SAN · AFC · CMA · ELE · GAS · FPT (+ ARQ, SD).</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><span class="none">en el template</span></td></tr>
+        <tr><td class="name">Ajuste de schedules (clientes)</td><td>Modificar los schedules del master-cuantificación para que muestren lo necesario para clientes.</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><a href="https://docs.google.com/document/d/10DgxynLWl8Sf8-u81Lmk5O-4IsMfqUBJ/edit">Doc</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ARMADO DE MASTERS -->
+  <div class="fam">
+    <div class="fam-h"><span class="dot" style="background:var(--master)"></span><h2>Armado de masters</h2><span class="cnt">documentación</span></div>
+    <table>
+      <thead><tr><th>Protocolo</th><th>Qué es</th><th>Estado</th><th>Enlaces</th></tr></thead>
+      <tbody>
+        <tr><td class="name">Documentación Master-sistemas ARQ</td><td>Protocolo de documentación ARQ + planos tipo.</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><a href="https://docs.google.com/spreadsheets/d/1irv2Uw0s_0Qk9c0mdim66nBTaLRnuCn8/edit?gid=966076189#gid=966076189">Hoja</a></td></tr>
+        <tr><td class="name">Master-sistemas ELE</td><td>Armar el master de ELE tomando como base el de ARQ + nomenclatura de planos.</td><td class="st"><span class="badge b-proc">En proceso</span></td><td class="lk"><a href="https://docs.google.com/spreadsheets/d/1axn5LtRU5D8C7z3M6EJiH8kpaNsWSStR/edit?gid=253784583#gid=253784583">Nomenclatura</a></td></tr>
+        <tr><td class="name">Master-sistemas (parámetros)</td><td>Parámetros a completar en cada sistema para su documentación + ajustes de View Template.</td><td class="st"><span class="badge b-proc">En proceso</span></td><td class="lk"><span class="none">—</span></td></tr>
+        <tr><td class="name">Master-piso (coordinación)</td><td>Organización de láminas para los planos de coordinación (documentación del master de piso).</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><span class="none">actualizado S03→P10</span></td></tr>
+        <tr><td class="name">Master-locales ARQ</td><td>Modo de usar el master + documentación de locales (cocinas, baños) del lado ARQ.</td><td class="st"><span class="badge b-proc">En proceso</span></td><td class="lk"><a href="https://docs.google.com/spreadsheets/d/1irv2Uw0s_0Qk9c0mdim66nBTaLRnuCn8/edit?gid=266432699#gid=266432699">Hoja</a></td></tr>
+        <tr><td class="name">Master-locales COORD</td><td>Ídem del lado de coordinación.</td><td class="st"><span class="badge b-proc">En proceso</span></td><td class="lk"><span class="none">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- INSUMO CLIENTE -->
+  <div class="fam">
+    <div class="fam-h"><span class="dot" style="background:var(--cli)"></span><h2>Insumo del cliente</h2></div>
+    <table>
+      <thead><tr><th>Protocolo</th><th>Qué es</th><th>Estado</th><th>Enlaces</th></tr></thead>
+      <tbody>
+        <tr><td class="name">Checklist detalles de locales</td><td>Checklist a completar por el cliente (define los locales).</td><td class="st"><span class="badge b-ok">Listo</span></td><td class="lk"><a href="https://docs.google.com/spreadsheets/d/1jyh-ubloQ4fKV2IvlENEK8PDanVeKEFc/edit?gid=1754765470#gid=1754765470">Hoja</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PENDIENTES -->
+  <div class="pend-list">
+    <h2>Pendientes del template (sugerencias)</h2>
+    <ul>
+      <li>Familias: actualizar familia de tanque (vista superior más simple); revisar tags en otra obra además de Casa Sucre.</li>
+      <li>Master-sistema ARQ: cargar tags y referencias necesarias.</li>
+      <li>Master-sistema ELE: armar y agregar nomenclatura de planos; revisar nombres de planos según la nomenclatura definida.</li>
+      <li>Exportaciones a DWF: sistema de carpetas y sesiones en los master-sistemas.</li>
+      <li>Master-cuant CARP: view template — puertas (tags) y que en plantas se vean en rojo.</li>
+      <li>Filtro CMA: agregar filtro para cañerías de AA (Model/Coord/Documentación) + System Type.</li>
+      <li>RCP: faltan vistas en algunos pico/pala (los que no son tipologías).</li>
+      <li>MOB: parámetro alacenas (no aparecen en planta — revisar si es de la familia).</li>
+    </ul>
+  </div>
+
+  <footer class="doc">Ctrl.S · hub de protocolos — índice maestro. La bitácora completa (changelog del template) vive en el Excel de hoja de ruta.</footer>
+</div>

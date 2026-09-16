@@ -1,0 +1,1558 @@
+<meta charset="utf-8">
+<title>Flujogramas por lote - Ctrl.S</title>
+<style>
+  @media print{
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    .node,.path,.cond-wrap,.metric,.changebox,.inputs,.docs,.row3,.branch{break-inside:avoid}
+    .sheet{page-break-after:always}
+    .sheet:last-child{page-break-after:auto}
+  }
+  @page{margin:12mm}
+  .cover{min-height:82vh;display:flex;flex-direction:column;justify-content:center;
+    font-family:Segoe UI,Arial,sans-serif;color:#1a1a1a;padding:40px;background:#f4f3ef}
+  .cover .k{font-style:italic;color:#555;font-size:14px;letter-spacing:.03em}
+  .cover h1{font-size:36px;margin:4px 0 6px;letter-spacing:-.01em}
+  .cover .s{font-size:15px;color:#555;margin-bottom:26px;max-width:640px}
+  .cover ol{font-size:15px;line-height:1.95;color:#333;padding-left:22px}
+  .cover a{color:#1E2A78;text-decoration:none;border-bottom:1px solid #b9c4ef}
+  .cover a:hover{border-color:#1E2A78;background:#eef1fb}
+  .cover .n{font-size:12px;color:#888;margin-top:26px}
+  .sheet{scroll-margin-top:16px}
+</style>
+<section class="sheet">
+  <div class="cover">
+    <div class="k">/ documentacion ejecutiva</div>
+    <h1>Flujogramas por lote</h1>
+    <div class="s">Ctrl.S - Reforma de lotes + matriz de modelado. Los 8 lotes actualizados al proceso vigente. La etiqueta triangulo azul marca lo actualizado respecto de los Miro.</div>
+    <ol>
+      <li><a href="#general">Proceso general (L1 - L8)</a></li>
+      <li><a href="#L1">L1 - Modelo base</a></li>
+      <li><a href="#L2">L2 - Detallado ARQ + parametros</a></li>
+      <li><a href="#L3">L3 - Ingenierias 2D</a></li>
+      <li><a href="#L4">L4 - Ingenierias 3D</a></li>
+      <li><a href="#L5">L5 - Coordinacion + completitud</a></li>
+      <li><a href="#L6">L6 - Documentacion</a></li>
+      <li><a href="#L7">L7 - Locales</a></li>
+      <li><a href="#L8">L8 - Detalles</a></li>
+    </ol>
+    <div class="n">Version a validar - no definitiva.</div>
+  </div>
+</section>
+<section id="general" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma general · L1 → L8</title>
+<style>
+  :root{--proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;--tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:520px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12px;color:#333;margin-top:4px}
+  .node.sm{max-width:340px;padding:9px 13px}.node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}.draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}.condicional{background:var(--condicional);border-color:#c39dbb;text-align:center}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}.cierre .desc{color:#d8d5cd}
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .arrow{width:2px;height:22px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:14px}
+  .row2{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;max-width:560px}.row2 .node{flex:1;min-width:220px}
+  .zone{width:100%;max-width:620px;border:2px solid #9db3d3;border-radius:16px;padding:16px 16px 20px;margin:0 auto;background:#eef3fb}
+  .zone.nivel{border-color:#c39dbb;background:#f7eff5}
+  .zone .zh{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+  .zone .zh .zt{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3a4d78}
+  .zone.nivel .zh .zt{color:#7b4f74}
+  .zone .zn{font-size:11.5px;color:#5a6a8a;text-align:center;margin-bottom:12px;font-style:italic}
+  .zone.nivel .zn{color:#8a6a86}
+  .repeat{font-size:11px;font-weight:700;color:#7b4f74;text-align:center;margin-top:12px;letter-spacing:.03em}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:480px}.loopnote b{color:#7a4a1a}
+  .paralelo{width:100%;max-width:620px;margin:16px auto 0;border:1.5px dashed #6bb077;border-radius:12px;padding:12px 14px;background:#f0f7ee}
+  .paralelo .ph{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#3f6e2a;text-align:center;margin-bottom:8px}
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}.legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ proceso general</span>
+    <h1>El proceso, de punta a punta — L1 → L8</h1>
+    <div class="sub">Vista general de los 8 lotes. Lo clave: <strong>L1 a L4 corren una vez por proyecto</strong>; de <strong>L5 en adelante el ciclo se repite por cada nivel</strong>. El plano de interferencias es la bisagra que separa coordinar de completar.</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+  </header>
+
+  <div class="flow">
+
+    <div class="node cierre" style="max-width:300px"><div class="ttl">Proyecto — ARQ / EST</div></div>
+    <div class="arrow"></div>
+
+    <!-- ZONA POR PROYECTO -->
+    <div class="zone">
+      <div class="zh"><span class="zt">■ Una vez · por proyecto</span></div>
+      <div class="flow">
+        <div class="node proceso sm"><span class="tag">L1</span><div class="ttl">Modelo base</div>
+          <div class="desc">Grillas, master, R0. EST general. Cierra con validación del cliente.</div></div>
+        <div class="arrow sm"></div>
+        <div class="row2">
+          <div class="node proceso sm"><span class="tag">L2 · adelantable</span><div class="ttl">Detallado ARQ + parámetros</div><div class="desc">Sin EST.</div></div>
+          <div class="node draft sm"><span class="tag">L3</span><div class="ttl">Ingenierías 2D</div><div class="desc">Draft + asesores.</div></div>
+        </div>
+        <div class="arrow sm"></div>
+        <div class="node proceso sm"><span class="tag">L4</span><div class="ttl">Ingenierías 3D — modelo troncal</div>
+          <div class="desc">Rama condicional EST interna. Los asesores vuelven.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node condicional sm"><span class="tag">Barrera · en L4</span><div class="ttl">¿EST del nivel modelada? → habilita coordinar</div></div>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+    <div class="repeat">▼ de acá en más, el ciclo se repite para CADA NIVEL ▼</div>
+    <div class="arrow sm"></div>
+
+    <!-- ZONA POR NIVEL -->
+    <div class="zone nivel">
+      <div class="zh"><span class="zt">◆ Se repite · por nivel</span></div>
+      <div class="flow">
+        <div class="node proceso sm"><span class="tag">L5 · coordinación</span><div class="ttl">Coordinación del nivel</div>
+          <div class="desc">Checklist + resolución de interferencias.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node draft sm" style="border-color:#c99a2e;border-width:2px"><span class="tag">Bisagra</span>
+          <div class="ttl">Documentar coordinación — plano de interferencias</div>
+          <div class="desc">Coordinación LISTA + documentada → habilita el detalle.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node proceso sm"><span class="tag">L5 · completitud</span><div class="ttl">Modelado detallado</div>
+          <div class="desc">Completitud ing. + ARQ, + pases + marks de EST.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node cierre sm" style="background:#1b6e63;border-color:#134f47"><span class="tag" style="opacity:.7">L6</span><div class="ttl">Documentación</div>
+          <div class="desc">Un plano por celda (ing. + ARQ) del nivel.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node decision sm"><div class="ttl">¿Todas las celdas documentadas?</div></div>
+        <div class="loopnote"><b>No</b> → sigue documentando. &nbsp;<b>Sí</b> ↓</div>
+        <div class="arrow sm"></div>
+        <div class="node cierre sm"><span class="tag" style="opacity:.7">Cierre</span><div class="ttl">Nivel cerrado — se congela</div>
+          <div class="desc">Cambio posterior = extra-contractual.</div></div>
+        <div class="repeat">↺ volver a L5 con el siguiente nivel</div>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+    <div class="node cierre" style="max-width:220px"><div class="ttl">Fin</div><div class="desc">Todos los niveles cerrados.</div></div>
+
+    <!-- PARALELO L7/L8 -->
+    <div class="paralelo">
+      <div class="ph">En paralelo · cuelgan de la ARQ detallada (L2)</div>
+      <div class="row2" style="max-width:100%">
+        <div class="node proceso sm"><span class="tag">L7</span><div class="ttl">Locales</div><div class="desc">Cocinas, baños, palieres, acceso, SUM, gimnasio.</div></div>
+        <div class="node proceso sm"><span class="tag">L8</span><div class="ttl">Detalles</div><div class="desc">Carpinterías + herrerías.</div></div>
+      </div>
+      <div class="loopnote" style="color:#3f6e2a">Sus artefactos <b>realimentan la completitud</b> del nivel en L5.</div>
+    </div>
+
+  </div>
+
+  <div class="legend"><h2>Referencias</h2><div class="items">
+    <div class="it"><span class="sw" style="background:#eef3fb;border-color:#9db3d3"></span>Por proyecto (una vez)</div>
+    <div class="it"><span class="sw" style="background:#f7eff5;border-color:#c39dbb"></span>Por nivel (se repite)</div>
+    <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+    <div class="it"><span class="sw" style="background:var(--draft);border-color:#c99a2e"></span>Draft / bisagra</div>
+    <div class="it"><span class="sw" style="background:#1b6e63"></span>Documentación</div>
+    <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre</div>
+  </div></div>
+
+  <footer class="doc">Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · Proceso general L1 → L8</footer>
+</div>
+
+</section>
+
+<section id="L1" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L1 · Modelo base</title>
+<style>
+  :root{
+    --proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;
+    --tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);
+    border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .actores{display:flex;gap:8px;align-items:center;font-size:12px;color:#666;margin:10px 0 0}
+  .actores b{color:#444;font-weight:600}
+  .actores .a{background:#fff;border:1px solid #d8d3c4;border-radius:20px;padding:3px 11px}
+
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;
+    box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:340px;padding:9px 13px}
+  .node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}
+  .draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}
+  .cierre .desc{color:#d8d5cd}
+
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;
+    background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+    border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+
+  .inputs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:820px}
+  .inputs .node{max-width:200px}
+  .docs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:620px;margin:2px auto 0}
+  .doc-chip{background:#fff;border:1px solid #d8d3c4;border-radius:5px;padding:4px 9px;font-size:11.5px;color:#444}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px 0 0}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:520px}
+  .loopnote b{color:#7a4a1a}
+  ul.mini{margin:4px 0 0;padding-left:18px;font-size:12px;color:#333}
+  ul.mini li{margin:1px 0}
+
+  .changebox{max-width:560px;margin:6px auto 0;display:flex;gap:12px;align-items:center;
+    background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;
+    display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}
+  .legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L1</span>
+    <h1>Modelo base</h1>
+    <div class="sub">Grillas, master y R0 del proyecto, incluida la <strong>estructura general</strong>. Cierra con la <strong>validación del cliente</strong>: sin cliente que aprueba, el proyecto no está estable.</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+    <div class="actores"><b>Actores:</b> <span class="a">Ctrl.S</span> <span class="a">Cliente</span> <span class="a">Asesor</span></div>
+  </header>
+
+  <div class="flow">
+
+    <!-- ENTRADAS -->
+    <div class="inputs">
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Ficha técnica</div></div>
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Planilla de locales</div></div>
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Mensura</div></div>
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Proyecto estabilizado</div>
+        <div class="desc">DWG estructura · DWG arquitectura</div></div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <!-- DRAFT -->
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Draft</div></div>
+    <div class="docs">
+      <span class="doc-chip">DWG ARQ x nivel</span>
+      <span class="doc-chip">DWG EST x nivel</span>
+    </div>
+
+    <div class="arrow"></div>
+
+    <!-- MODELADO -->
+    <div class="node proceso">
+      <span class="tag">Proceso</span>
+      <div class="ttl">Modelado <span class="upd">▲ alcance</span></div>
+      <div class="desc">Grillas, master, R0. Incluye la <strong>EST general</strong> (la estructura general es responsabilidad de L1).</div>
+    </div>
+    <div class="docs">
+      <span class="doc-chip">Modelo EST</span>
+      <span class="doc-chip">Modelo ARQ</span>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <!-- REUNIÓN 1 -->
+    <div class="node reunion">
+      <span class="tag">Reunión</span>
+      <div class="ttl">Revisión del modelo 3D</div>
+      <ul class="mini">
+        <li>Resolución de consultas surgidas durante el modelado</li>
+        <li>Solicitud de ejemplares al cliente para la documentación</li>
+        <li>Checklist</li>
+      </ul>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Ajuste?</div></div>
+    <div class="loopnote"><b>Sí</b> → vuelve al modelado. &nbsp;<b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- DOCUMENTACIÓN -->
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Documentación</div></div>
+    <div class="docs">
+      <span class="doc-chip">Plano EST</span>
+      <span class="doc-chip">Plano ARQ</span>
+    </div>
+    <div class="doc-note"><span class="upd">▲ cambio</span> ya no se llaman &laquo;plano de prueba&raquo; — en L1 son planos.</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- REUNIÓN 2 -->
+    <div class="node reunion">
+      <span class="tag">Reunión</span>
+      <div class="ttl">Revisión de planos de muestra</div>
+      <ul class="mini"><li>Resolución de más consultas surgidas en modelado y documentación</li></ul>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Ajuste?</div></div>
+    <div class="loopnote"><b>Sí</b> → vuelve a documentación. &nbsp;<b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- ENTREGA -->
+    <div class="node proceso"><span class="tag">Entrega</span><div class="ttl">Entrega L1</div></div>
+    <div class="docs">
+      <span class="doc-chip">Planos ARQ</span>
+      <span class="doc-chip">Planos EST</span>
+      <span class="doc-chip">Cuantificación EST</span>
+      <span class="doc-chip">Cuantificación 5D</span>
+      <span class="doc-chip" style="background:#eef3fb;border-color:#b9c4ef">DWG a asesores <span class="upd" style="margin-left:4px">▲</span></span>
+    </div>
+    <div class="doc-note"><span class="upd">▲ nuevo</span> L1 emite los planos generales ARQ/EST en el MASTER de cada sistema → exportados a DWG → a los asesores. Se terminan de pulir en L2/L3.</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- REVISIONES -->
+    <div class="node reunion">
+      <span class="tag">Revisiones</span>
+      <div class="ttl">Design review</div>
+      <ul class="mini"><li>Correcciones por design review</li><li>Máximo de revisiones</li></ul>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Ajuste?</div></div>
+    <div class="loopnote"><b>Sí</b> → ajuste de documentación (aplica gestión de cambios). &nbsp;<b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- CIERRE = VALIDACIÓN CLIENTE -->
+    <div class="node decision" style="background:#cfe0cf;border-style:solid;border-color:#7fae7f">
+      <span class="tag">Cierre del lote <span class="upd">▲ clave</span></span>
+      <div class="ttl">Validación del cliente</div>
+      <div class="desc">El cliente aprueba el modelo base. Sin esta validación, el proyecto no se considera estable.</div>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node cierre"><span class="tag">L1 cerrado</span><div class="ttl">Proyecto estable →</div>
+      <div class="desc">Habilita el detallado (L2) y las ingenierías (L3), con la EST general ya cerrada.</div></div>
+
+    <div class="changebox">
+      <div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <h2>Referencias</h2>
+    <div class="items">
+      <div class="it"><span class="sw" style="background:var(--entrada)"></span>Entrada</div>
+      <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+      <div class="it"><span class="sw" style="background:var(--reunion)"></span>Reunión</div>
+      <div class="it"><span class="sw" style="background:var(--decision);border-style:dashed"></span>Decisión</div>
+      <div class="it"><span class="sw" style="background:#cfe0cf;border-color:#7fae7f"></span>Validación cliente</div>
+      <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre</div>
+      <div class="it"><span class="sw" style="background:var(--cambios)"></span>Gestión de cambios</div>
+      <div class="it"><span class="sw" style="background:#e3e8fb;border-color:#b9c4ef"></span>▲ actualizado vs. Miro</div>
+    </div>
+  </div>
+
+  <footer class="doc">
+    Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L1 Modelo base
+  </footer>
+</div>
+
+</section>
+
+<section id="L2" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L2 · Detallado ARQ + parámetros</title>
+<style>
+  :root{--proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;--tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:360px;padding:9px 13px}.node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}.draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}.condicional{background:var(--condicional);border-color:#c39dbb}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}.cierre .desc{color:#d8d5cd}
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+  .inputs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:760px}.inputs .node{max-width:240px}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px auto 0;max-width:560px}
+  ul.mini{margin:4px 0 0;padding-left:18px;font-size:12px;color:#333}ul.mini li{margin:1px 0}
+  .changebox{max-width:560px;margin:6px auto 0;display:flex;gap:12px;align-items:center;background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}.legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L2</span>
+    <h1>Detallado ARQ + parámetros</h1>
+    <div class="sub">Detalle de la arquitectura y carga de parámetros/planillas. Corre <strong>en paralelo</strong>: no frena la coordinación, pero es condición para documentar la arquitectura. <em>Ya no incluye estructura.</em></div>
+    <span class="badge">Armado del resumen (no había Miro) · a validar</span>
+  </header>
+
+  <div class="flow">
+    <div class="inputs">
+      <div class="node entrada"><span class="tag">Entrada · viene de L1</span><div class="ttl">Modelo base validado</div><div class="desc">Con la EST general ya cerrada.</div></div>
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Planilla de materialización del proyecto</div></div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="node proceso">
+      <span class="tag">Etapa L2.1 · adelantable</span>
+      <div class="ttl">Arquitectura detallada</div>
+      <div class="desc">Se puede adelantar sin esperar los parámetros. No bloquea coordinar; es la base de la que cuelgan Locales (L7) y Detalles (L8).</div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="node proceso">
+      <span class="tag">Etapa L2.2 · cierra L2</span>
+      <div class="ttl">Parámetros / planillas</div>
+      <div class="desc">Carga de parámetros a partir de la <strong>planilla de materialización</strong>. Cierra el lote.</div>
+    </div>
+    <div class="doc-note"><span class="upd">▲ cambio</span> L2 ya no tiene EST (pasó a L1). Corre en paralelo: no bloquea coordinar, pero sí es condición para <strong>documentar la ARQ</strong>.</div>
+    <div class="doc-note">Las <strong>marks de EST</strong> (C1, V1, L1…) NO se cargan en L2 → van piso por piso en la coordinación (L5).</div>
+
+    <div class="arrow"></div>
+
+    <div class="node cierre"><span class="tag">L2 cerrado</span><div class="ttl">Arquitectura definida y parametrizada →</div>
+      <div class="desc">Condición para documentar ARQ. Alimenta Locales (L7) y Detalles (L8).</div></div>
+
+    <div class="changebox"><div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div></div>
+  </div>
+
+  <div class="legend"><h2>Referencias</h2><div class="items">
+    <div class="it"><span class="sw" style="background:var(--entrada)"></span>Entrada</div>
+    <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+    <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre</div>
+    <div class="it"><span class="sw" style="background:var(--cambios)"></span>Gestión de cambios</div>
+    <div class="it"><span class="sw" style="background:#e3e8fb;border-color:#b9c4ef"></span>▲ actualizado</div>
+  </div></div>
+
+  <footer class="doc">Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L2 Detallado ARQ + parámetros</footer>
+</div>
+
+</section>
+
+<section id="L3" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L3 · Ingenierías 2D</title>
+<style>
+  :root{
+    --proceso:#bbd0ea;
+    --draft:#f5c99b;
+    --reunion:#bfe3c4;
+    --decision:#d9e2ef;
+    --condicional:#efe0ec;
+    --cambios:#f2e2c0;
+    --cierre:#1a1a1a;
+    --entrada:#e6ede4;
+    --bloqueo:#ecc9c4;
+    --tinta:#1a1a1a;
+    --linea:#8a8a8a;
+    --papel:#f4f3ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:20px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);
+    border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;
+    box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:340px;padding:9px 13px}
+  .node.sm .ttl{font-size:13px}
+
+  .proceso{background:var(--proceso)}
+  .draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center;border-radius:8px}
+  .entrada{background:var(--entrada)}
+  .cambios{background:var(--cambios)}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}
+  .cierre .ttl{font-size:15px}
+  .bloqueo{background:var(--bloqueo);border-color:#b06a60}
+
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+    border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+
+  .inputs{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;max-width:760px}
+  .inputs .node{max-width:230px}
+
+  /* rama de decisión: dos caminos etiquetados */
+  .branch{width:100%;max-width:900px;display:flex;gap:20px;justify-content:center;align-items:flex-start;margin-top:6px}
+  .path{flex:1;min-width:260px;border:1px dashed #bbb;border-radius:10px;padding:12px;background:#fdfdfc}
+  .path>.lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#666;
+    text-align:center;margin-bottom:10px}
+  .path>.lbl.si{color:#3f6e2a}
+  .path>.lbl.no{color:#a04b3d}
+  .path .flow{gap:0}
+  .path .node{max-width:100%}
+
+  .docs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:600px;margin:2px auto 0}
+  .doc-chip{background:#fff;border:1px solid #d8d3c4;border-radius:5px;padding:4px 9px;font-size:11.5px;color:#444}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px 0 0}
+
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:520px}
+  .loopnote b{color:#7a4a1a}
+
+  .changebox{max-width:560px;margin:4px auto 0;display:flex;gap:12px;align-items:center;
+    background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;
+    display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+
+  .legend{margin-top:44px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}
+  .legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L3</span>
+    <h1>Ingenierías 2D</h1>
+    <div class="sub">Definición técnica de <strong>estructura e instalaciones</strong> en 2D con los asesores, coordinación de interferencias y cierre para habilitar el modelado 3D. <em>Ex &laquo;MEP 2D&raquo; — se renombró a Ingenierías porque la estructura ahora vive dentro de este proceso (la checklist arranca con 1-Estructuras).</em></div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+  </header>
+
+  <div class="flow">
+
+    <!-- ENTRADAS -->
+    <div class="inputs">
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Ficha técnica</div></div>
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Proyecto arquitectura INT</div></div>
+      <div class="node entrada"><span class="tag">Entrada</span><div class="ttl">Proyecto arquitectura EXT</div></div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="node proceso">
+      <span class="tag">Proceso</span>
+      <div class="ttl">Diseño 2D de draft</div>
+      <div class="desc">Checklist de criterios de diseño de instalaciones.</div>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <!-- DECISIÓN GESTIÓN DE ASESORES -->
+    <div class="node decision">
+      <span class="tag">Decisión</span>
+      <div class="ttl">¿El proyecto tiene gestión de asesores?</div>
+    </div>
+
+    <div class="branch">
+      <!-- CAMINO SÍ: con gestión -->
+      <div class="path">
+        <div class="lbl si">Sí · con gestión de asesores</div>
+        <div class="flow">
+          <div class="node proceso sm"><div class="ttl">Croquis base para asesores</div></div>
+          <div class="arrow sm"></div>
+          <div class="node draft sm"><span class="tag">Draft</span><div class="ttl">Draft / asesores</div></div>
+          <div class="docs">
+            <span class="doc-chip">DWG EST x nivel</span>
+            <span class="doc-chip">DWG SAN x nivel</span>
+            <span class="doc-chip">DWG AFC x nivel</span>
+            <span class="doc-chip">DWG CMA x nivel</span>
+            <span class="doc-chip">DWG GAS x nivel</span>
+            <span class="doc-chip">DWG ELE/ILU x nivel</span>
+            <span class="doc-chip">DWG FPT x nivel</span>
+            <span class="doc-chip">DWG BTE x nivel</span>
+            <span class="doc-chip">DWG FMO x nivel</span>
+          </div>
+          <div class="doc-note">Estructura (EST) y sanitarias (SAN) ahora forman parte del set — separación de archivos por nivel y sistema.</div>
+          <div class="arrow sm"></div>
+          <div class="node proceso sm"><div class="ttl">Revisión de draft de asesores</div></div>
+          <div class="arrow sm"></div>
+          <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Ajuste necesario?</div></div>
+          <div class="loopnote"><b>Sí</b> → Reunión / consulta con el asesor → ¿respuesta para ajuste? Si no la da:
+            <b>bloqueo</b> (insistir hasta obtener respuesta, asentar en bitácora).</div>
+          <div class="arrow sm"></div>
+          <div class="node proceso sm"><div class="ttl">Copiar y pegar en draft</div>
+            <div class="desc">No → se lleva el draft del asesor al modelo.</div></div>
+        </div>
+      </div>
+
+      <!-- CAMINO NO: sin gestión -->
+      <div class="path">
+        <div class="lbl no">No · sin gestión de asesores</div>
+        <div class="flow">
+          <div class="node entrada sm"><div class="ttl">El cliente envía la info del proyecto MEP</div>
+            <div class="desc">Se avanza directo a separar los archivos por nivel y sistema.</div></div>
+          <div class="arrow sm"></div>
+          <div class="node proceso sm" style="opacity:.55"><div class="ttl">→ va directo a Coordinación 2D</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <!-- COORDINACIÓN -->
+    <div class="node proceso">
+      <span class="tag">Proceso · confluyen ambos caminos</span>
+      <div class="ttl">Coordinación 2D — draft</div>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <!-- DECISIÓN INTERFERENCIAS -->
+    <div class="node decision">
+      <span class="tag">Decisión</span>
+      <div class="ttl">¿Hay interferencias?</div>
+    </div>
+
+    <div class="branch">
+      <!-- SÍ hay interferencias -->
+      <div class="path">
+        <div class="lbl si">Sí · hay interferencias</div>
+        <div class="flow">
+          <div class="node draft sm"><span class="tag">Draft</span><div class="ttl">Imprimir interferencias + presupuesto</div>
+            <div class="desc">Consultar al asesor si fuera necesario.</div></div>
+          <div class="arrow sm"></div>
+          <div class="node reunion sm"><span class="tag">Reunión</span><div class="ttl">Reunión de consulta</div></div>
+          <div class="arrow sm"></div>
+          <div class="node decision sm"><div class="ttl">¿Resolución de interferencia aprobada?</div></div>
+          <div class="loopnote"><b>No</b> → bloqueo (insistir, asentar en bitácora). &nbsp;<b>Sí</b> ↓</div>
+          <div class="arrow sm"></div>
+          <div class="node proceso sm"><div class="ttl">Aplicar ajuste</div></div>
+        </div>
+      </div>
+
+      <!-- NO hay interferencias -->
+      <div class="path">
+        <div class="lbl no">No · sin interferencias</div>
+        <div class="flow">
+          <div class="node reunion sm"><span class="tag">Reunión</span><div class="ttl">Reunión de cierre</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="node cierre"><span class="tag">Cierre del lote</span><div class="ttl">Continúa el proceso →</div>
+      <div class="desc">Instalaciones definidas y coordinadas en 2D. Habilita L4 · Ingenierías 3D.</div></div>
+
+    <div class="arrow sm"></div>
+
+    <div class="changebox">
+      <div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <h2>Referencias</h2>
+    <div class="items">
+      <div class="it"><span class="sw" style="background:var(--entrada)"></span>Entrada</div>
+      <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+      <div class="it"><span class="sw" style="background:var(--draft)"></span>Draft / documento</div>
+      <div class="it"><span class="sw" style="background:var(--reunion)"></span>Reunión</div>
+      <div class="it"><span class="sw" style="background:var(--decision);border-style:dashed"></span>Decisión</div>
+      <div class="it"><span class="sw" style="background:var(--bloqueo)"></span>Bloqueo</div>
+      <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre</div>
+      <div class="it"><span class="sw" style="background:var(--cambios)"></span>Gestión de cambios</div>
+    </div>
+  </div>
+
+  <footer class="doc">
+    Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L3 Ingenierías 2D
+  </footer>
+</div>
+
+</section>
+
+<section id="L4" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L4 · Ingenierías 3D</title>
+<style>
+  :root{
+    --proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;
+    --tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);
+    border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;
+    box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:360px;padding:9px 13px}
+  .node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}
+  .draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}
+  .condicional{background:var(--condicional);border-color:#c39dbb}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}
+  .cierre .desc{color:#d8d5cd}
+
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;
+    background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .flag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#8a5a1a;
+    background:#f2e2c0;border:1px solid #d9be80;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+    border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+
+  .docs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:640px;margin:2px auto 0}
+  .doc-chip{background:#fff;border:1px solid #d8d3c4;border-radius:5px;padding:4px 9px;font-size:11.5px;color:#444}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px auto 0;max-width:560px}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:520px}
+  .loopnote b{color:#7a4a1a}
+  ul.mini{margin:4px 0 0;padding-left:18px;font-size:12px;color:#333}
+  ul.mini li{margin:1px 0}
+  .cond-wrap{max-width:600px;width:100%;border:1.5px dashed #c39dbb;border-radius:12px;padding:14px;background:#faf4f8;margin-bottom:2px}
+  .cond-wrap .ch{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#8b5f83;text-align:center;margin-bottom:10px}
+
+  .changebox{max-width:560px;margin:6px auto 0;display:flex;gap:12px;align-items:center;
+    background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;
+    display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}
+  .legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L4</span>
+    <h1>Ingenierías 3D</h1>
+    <div class="sub">Modelado troncal de cada sistema a partir de los draft 2D coordinados. <em>Ex &laquo;MEP 3D&raquo;.</em> Incluye la rama condicional de modelado de estructura interna.</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+  </header>
+
+  <div class="flow">
+
+    <!-- ENTRADA -->
+    <div class="node draft"><span class="tag">Entrada · viene de L3</span><div class="ttl">Draft / asesores</div>
+      <div class="desc">Ingenierías 2D coordinadas y separadas por nivel y sistema.</div></div>
+
+    <div class="arrow"></div>
+
+    <!-- TAREA 1 CONDICIONAL: EST INTERNA -->
+    <div class="cond-wrap">
+      <div class="ch">Tarea 1 · rama condicional — modelado EST interno <span class="upd">▲ nuevo</span></div>
+      <div class="flow">
+        <div class="node decision sm" style="max-width:440px">
+          <span class="tag">Disparador · dos banderas</span>
+          <div class="ttl">¿Proyecto interno <u>y</u> el estructuralista cerró el cálculo?</div>
+        </div>
+        <div class="loopnote">Con las dos banderas activas → se modela la <b>EST interna</b>. Si falta alguna, la EST no entra todavía.</div>
+        <div class="doc-note"><b>Adelantable:</b> si el IFC interno está actualizado y las sanitarias llegan antes del cálculo cerrado, se modelan los <b>troncales MEP en paralelo</b> sin esperar la EST.</div>
+      </div>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <!-- DRAFT -->
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Draft por sistema</div>
+      <div class="desc">A medida que se cierra cada sistema se procede con su modelado.</div></div>
+    <div class="docs">
+      <span class="doc-chip">DWG SAN x nivel</span>
+      <span class="doc-chip">DWG AFC x nivel</span>
+      <span class="doc-chip">DWG CMA x nivel</span>
+      <span class="doc-chip">DWG GAS x nivel</span>
+      <span class="doc-chip">DWG ELE/ILU x nivel</span>
+      <span class="doc-chip">DWG FPT x nivel</span>
+      <span class="doc-chip">DWG BTE x nivel</span>
+      <span class="doc-chip">DWG FMO x nivel</span>
+    </div>
+    <div class="doc-note">Set de sistemas: EST · SAN · AFC · CMA · GAS · ELE/ILU · FPT · BTE · FMO <span class="upd">▲ GAS incluido</span></div>
+
+    <div class="arrow sm"></div>
+
+    <!-- MODELO MEP -->
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Modelo MEP troncal</div>
+      <div class="desc">Según la complejidad del proyecto se define qué se modela de cada sistema.</div></div>
+    <div class="docs">
+      <span class="doc-chip">Modelo SAN</span>
+      <span class="doc-chip">Modelo AFC</span>
+      <span class="doc-chip">Modelo CMA</span>
+      <span class="doc-chip">Modelo GAS</span>
+      <span class="doc-chip">Modelo ELE/ILU</span>
+      <span class="doc-chip">Modelo FPT</span>
+      <span class="doc-chip">Modelo BTE</span>
+      <span class="doc-chip">Modelo FMO</span>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <!-- REVISIÓN -->
+    <div class="node proceso">
+      <span class="tag">Revisión</span>
+      <div class="ttl">Funcionamiento general del edificio</div>
+      <div class="desc">ARQ + EST + SAN + CMA + AFC. Checklist:</div>
+      <ul class="mini">
+        <li>Plenos</li><li>Salas de máquinas</li><li>Normativa de incendio</li>
+        <li>Conexiones pluviales</li><li>Conexiones cloacales</li>
+      </ul>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Consulta?</div></div>
+    <div class="loopnote"><b>Sí</b> → ¿ajuste? → si aplica, <b>reunión</b> y se corrige (vuelve a revisión). &nbsp;<b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- BARRERA COORDINACIÓN (dentro de L4) -->
+    <div class="node condicional" style="border-style:dashed;text-align:center">
+      <span class="tag">Barrera de coordinación · en L4 <span class="upd">▲</span></span>
+      <div class="ttl">¿La EST del nivel está modelada?</div>
+    </div>
+    <div class="loopnote"><b>No</b> → no se puede coordinar ese nivel: espera la EST (la general o el piso puntual). La EST no frena el troncal, <b>sí frena la coordinación</b>. &nbsp;<b>Sí</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node cierre"><span class="tag">L4 · troncal listo</span><div class="ttl">Habilita la coordinación (L5) →</div>
+      <div class="desc">En proyecto interno la EST general puede cerrar recién acá, más tarde que en terceros (donde cierra en L1).</div></div>
+
+    <div class="changebox">
+      <div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <h2>Referencias</h2>
+    <div class="items">
+      <div class="it"><span class="sw" style="background:var(--draft)"></span>Draft / documento</div>
+      <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+      <div class="it"><span class="sw" style="background:var(--reunion)"></span>Reunión</div>
+      <div class="it"><span class="sw" style="background:var(--decision);border-style:dashed"></span>Decisión</div>
+      <div class="it"><span class="sw" style="background:var(--condicional);border-color:#c39dbb"></span>Condicional / barrera</div>
+      <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre</div>
+      <div class="it"><span class="sw" style="background:#e3e8fb;border-color:#b9c4ef"></span>▲ actualizado</div>
+      <div class="it"><span class="sw" style="background:#f2e2c0;border-color:#d9be80"></span>? a confirmar</div>
+    </div>
+  </div>
+
+  <footer class="doc">
+    Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L4 Ingenierías 3D
+  </footer>
+</div>
+
+</section>
+
+<section id="L5" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L5 · Coordinación + completitud</title>
+<style>
+  :root{--proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;--tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:360px;padding:9px 13px}.node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}.draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}.condicional{background:var(--condicional);border-color:#c39dbb}
+  .bloqueo{background:var(--bloqueo);border-color:#b06a60}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}.cierre .desc{color:#d8d5cd}
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+  .inputs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:820px}.inputs .node{max-width:150px;padding:8px 10px}.inputs .ttl{font-size:12px}
+  .docs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:640px;margin:2px auto 0}
+  .doc-chip{background:#fff;border:1px solid #d8d3c4;border-radius:5px;padding:4px 9px;font-size:11.5px;color:#444}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px auto 0;max-width:560px}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:520px}.loopnote b{color:#7a4a1a}
+  ul.mini{margin:4px 0 0;padding-left:18px;font-size:12px;color:#333}ul.mini li{margin:1px 0}
+  .changebox{max-width:560px;margin:6px auto 0;display:flex;gap:12px;align-items:center;background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}.legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L5</span>
+    <h1>Coordinación + completitud</h1>
+    <div class="sub">Coordinación de todos los sistemas por nivel, resolución de interferencias y modelado detallado (completitud). <strong>Cierra por nivel</strong>: el nivel cerrado se congela. Peso: 40%.</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+  </header>
+
+  <div class="flow">
+
+    <div class="node entrada"><span class="tag">Entrada · viene de L4</span>
+      <div class="ttl">Troncal MEP listo + EST del nivel modelada</div>
+      <div class="desc">La barrera de coordinación ya se controló en L4. Recién con la EST del nivel modelada se puede coordinar. <strong>Se repite por nivel.</strong></div></div>
+
+    <div class="arrow sm"></div>
+
+    <!-- ENTRADAS -->
+    <div class="inputs">
+      <div class="node entrada"><span class="tag">Modelo</span><div class="ttl">Modelo EST</div></div>
+      <div class="node entrada"><span class="tag">Modelo</span><div class="ttl">Modelo ARQ</div></div>
+      <div class="node entrada"><span class="tag">Modelo</span><div class="ttl">Modelo MEP</div></div>
+    </div>
+    <div class="docs" style="margin-top:8px">
+      <span class="doc-chip">Master piso FUND</span>
+      <span class="doc-chip">Master piso S0N</span>
+      <span class="doc-chip">Master piso P00</span>
+      <span class="doc-chip">Master piso P0N</span>
+      <span class="doc-chip">Corte general</span>
+    </div>
+
+    <div class="arrow"></div>
+
+    <!-- COORDINACIÓN -->
+    <div class="node proceso">
+      <span class="tag">Proceso</span>
+      <div class="ttl">Coordinación</div>
+      <div class="desc">Checklist:</div>
+      <ul class="mini"><li>Plenos</li><li>Normativa (general)</li><li>Normativa de incendio</li><li>Pluviales</li><li>Desagües</li></ul>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Coincidencia / interferencia que requiere ajuste?</div></div>
+    <div class="loopnote"><b>Sí</b> → reunión / consulta → ¿requerido para ajuste? Si no responden: <b>bloqueo</b> (insistir, asentar en bitácora). &nbsp;<b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Ajuste de modelo</div>
+      <div class="desc">Se aplican los ajustes de coordinación al modelo.</div></div>
+
+    <div class="arrow sm"></div>
+
+    <!-- BISAGRA: DOCUMENTAR COORDINACIÓN -->
+    <div class="node draft" style="border-color:#c99a2e;border-width:2px">
+      <span class="tag">Bisagra <span class="upd">▲ clave</span></span>
+      <div class="ttl">Documentar la coordinación — plano de interferencias</div>
+      <div class="desc">Coordinación del nivel LISTA <strong>+ documentada (plano de interferencias emitido)</strong> es lo que <strong>habilita el modelado detallado</strong>. Sin este plano, no se pasa a completar.</div>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <!-- COMPLETITUD -->
+    <div class="node proceso">
+      <span class="tag">Completitud <span class="upd">▲ vive en L5</span></span>
+      <div class="ttl">Modelado detallado</div>
+      <div class="desc">Checklist de modelado detallado por sistema. El detalle post-coordinación se hace acá (ya no en L4).</div>
+    </div>
+    <div class="docs">
+      <span class="doc-chip">Modelo EST actualizado</span>
+      <span class="doc-chip">Modelo ARQ actualizado</span>
+      <span class="doc-chip">Modelo MEP actualizado</span>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="node cierre">
+      <span class="tag">Cierre por nivel <span class="upd" style="background:#2a3560;border-color:#2a3560;color:#dfe4fb">▲ unidad = nivel</span></span>
+      <div class="ttl">Nivel coordinado y completo →</div>
+      <div class="desc">El nivel se congela. Un cambio posterior es extra-contractual. Habilita L6 · Documentación de ese nivel.</div>
+    </div>
+
+    <div class="changebox"><div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div></div>
+  </div>
+
+  <div class="legend"><h2>Referencias</h2><div class="items">
+    <div class="it"><span class="sw" style="background:var(--entrada)"></span>Entrada / modelo</div>
+    <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+    <div class="it"><span class="sw" style="background:var(--decision);border-style:dashed"></span>Decisión</div>
+    <div class="it"><span class="sw" style="background:var(--condicional);border-color:#c39dbb"></span>Barrera</div>
+    <div class="it"><span class="sw" style="background:var(--bloqueo)"></span>Bloqueo</div>
+    <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre por nivel</div>
+    <div class="it"><span class="sw" style="background:#e3e8fb;border-color:#b9c4ef"></span>▲ actualizado</div>
+  </div></div>
+
+  <footer class="doc">Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L5 Coordinación + completitud</footer>
+</div>
+
+</section>
+
+<section id="L6" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L6 · Documentación</title>
+<style>
+  :root{--proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;--tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:360px;padding:9px 13px}.node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}.draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}.condicional{background:var(--condicional);border-color:#c39dbb}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}.cierre .desc{color:#d8d5cd}
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+  .docs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:660px;margin:2px auto 0}
+  .doc-chip{background:#fff;border:1px solid #d8d3c4;border-radius:5px;padding:4px 9px;font-size:11.5px;color:#444}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px auto 0;max-width:560px}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:520px}.loopnote b{color:#7a4a1a}
+  ul.mini{margin:4px 0 0;padding-left:18px;font-size:12px;color:#333}ul.mini li{margin:1px 0}
+  .changebox{max-width:600px;margin:6px auto 0;display:flex;gap:12px;align-items:center;background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+  .metric{max-width:600px;margin:14px auto 0;border:1px dashed #b8912f;border-radius:10px;padding:12px;background:#fbf6ea}
+  .metric .mh{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#8a6a2a;text-align:center;margin-bottom:8px}
+  .metric .mrow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:12px;color:#5a4a1a}
+  .metric .mbox{background:#fff;border:1px solid #d9be80;border-radius:6px;padding:6px 10px}
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}.legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L6</span>
+    <h1>Documentación</h1>
+    <div class="sub">Emisión de la documentación gráfica de cada nivel, por sistema. <strong>Por nivel</strong>: el nivel queda cerrado cuando toda su documentación está emitida. Peso: 10%.</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+  </header>
+
+  <div class="flow">
+
+    <div class="node entrada"><span class="tag">Entrada · viene de L5</span><div class="ttl">Nivel coordinado y completo</div>
+      <div class="desc">Modelos EST/ARQ/MEP actualizados y coordinados.</div></div>
+
+    <div class="arrow"></div>
+
+    <!-- DOCUMENTACIÓN -->
+    <div class="node proceso">
+      <span class="tag">Proceso</span>
+      <div class="ttl">Documentación</div>
+      <div class="desc">Checklist de documentación por sistema. Se define qué pisos se documentan completos para revisar la gráfica.</div>
+    </div>
+    <div class="docs">
+      <span class="doc-chip">Plano prueba EST (replanteo)</span>
+      <span class="doc-chip">Plano prueba SAN</span>
+      <span class="doc-chip">Plano prueba AFC</span>
+      <span class="doc-chip">Plano prueba CMA</span>
+      <span class="doc-chip">Plano prueba GAS</span>
+      <span class="doc-chip">Plano prueba ELE/ILU/BTE</span>
+      <span class="doc-chip">Plano prueba FPT</span>
+      <span class="doc-chip">Plano prueba replanteo albañilería</span>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Ajuste?</div></div>
+    <div class="loopnote"><b>Sí</b> → reunión (revisión de planos de muestra, resolución de consultas). &nbsp;<b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- ENTREGA -->
+    <div class="node proceso"><span class="tag">Entrega del nivel <span class="upd">▲ era «Entrega L4»</span></span><div class="ttl">Entrega de documentación</div></div>
+    <div class="docs">
+      <span class="doc-chip">Plano replanteo bases y solados</span>
+      <span class="doc-chip">Plano replanteo EST</span>
+      <span class="doc-chip">Plano SAN</span>
+      <span class="doc-chip">Plano AFC</span>
+      <span class="doc-chip">Plano CMA</span>
+      <span class="doc-chip">Plano GAS</span>
+      <span class="doc-chip">Plano ELE/ILU/BTE</span>
+      <span class="doc-chip">Plano FPT</span>
+      <span class="doc-chip">Plano replanteo albañilería</span>
+      <span class="doc-chip">Detalle sala de máquinas</span>
+      <span class="doc-chip">Detalle de escaleras</span>
+    </div>
+    <div class="doc-note">Por nivel (FUND · S01 · P00 · P0N). Incluye encofrados y pases (EST); muros, pisos, cielos y revestimientos (albañilería).</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node reunion"><span class="tag">Revisiones</span><div class="ttl">Design review</div>
+      <ul class="mini"><li>Correcciones por design review</li><li>Máximo de revisiones</li></ul></div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node decision sm"><span class="tag">Decisión</span><div class="ttl">¿Ajuste?</div></div>
+    <div class="loopnote"><b>Sí</b> → ajuste de documentación + ajuste de cronograma (aplica gestión de cambios). &nbsp;<b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node cierre">
+      <span class="tag">Cierre del nivel <span class="upd" style="background:#2a3560;border-color:#2a3560;color:#dfe4fb">▲ se congela</span></span>
+      <div class="ttl">Fin de etapa — nivel documentado</div>
+      <div class="desc">Cuando todas las celdas del nivel (ingenierías + ARQ) están documentadas, el nivel se congela. Cambio posterior = extra-contractual.</div>
+    </div>
+
+    <!-- MEDICIÓN DE ERRORES -->
+    <div class="metric">
+      <div class="mh">Si hubo ajuste ← rama de gestión de cambios</div>
+      <div class="mrow">
+        <div class="mbox">Cuantificar complejidad del ajuste y origen del error</div>
+        <span>→</span>
+        <div class="mbox">Medición de errores</div>
+      </div>
+    </div>
+
+    <div class="changebox"><div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div></div>
+  </div>
+
+  <div class="legend"><h2>Referencias</h2><div class="items">
+    <div class="it"><span class="sw" style="background:var(--entrada)"></span>Entrada</div>
+    <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+    <div class="it"><span class="sw" style="background:var(--reunion)"></span>Reunión</div>
+    <div class="it"><span class="sw" style="background:var(--decision);border-style:dashed"></span>Decisión</div>
+    <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre por nivel</div>
+    <div class="it"><span class="sw" style="background:#fbf6ea;border-color:#b8912f"></span>Medición de errores</div>
+    <div class="it"><span class="sw" style="background:#e3e8fb;border-color:#b9c4ef"></span>▲ actualizado</div>
+  </div></div>
+
+  <footer class="doc">Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L6 Documentación</footer>
+</div>
+
+</section>
+
+<section id="L7" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L7 · Locales</title>
+<style>
+  :root{--proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;--tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:360px;padding:9px 13px}.node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}.draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}.condicional{background:var(--condicional);border-color:#c39dbb}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}.cierre .desc{color:#d8d5cd}
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+  .inputs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:820px}.inputs .node{max-width:160px;padding:8px 10px}.inputs .ttl{font-size:12px}
+  .branch{width:100%;max-width:900px;display:flex;gap:20px;justify-content:center;align-items:flex-start;margin-top:6px}
+  .path{flex:1;min-width:260px;border:1px dashed #bbb;border-radius:10px;padding:12px;background:#fdfdfc}
+  .path>.lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#666;text-align:center;margin-bottom:10px}
+  .path .flow{gap:0}.path .node{max-width:100%}
+  .docs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px;margin:2px auto 0}
+  .doc-chip{background:#fff;border:1px solid #d8d3c4;border-radius:5px;padding:4px 9px;font-size:11.5px;color:#444}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px auto 0;max-width:560px}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:520px}.loopnote b{color:#7a4a1a}
+  ul.mini{margin:4px 0 0;padding-left:18px;font-size:12px;color:#333}ul.mini li{margin:1px 0}
+  .changebox{max-width:600px;margin:6px auto 0;display:flex;gap:12px;align-items:center;background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+  .pill{display:inline-block;font-size:11px;font-weight:600;color:#3f6e2a;background:#dcecd2;border:1px solid #a9cf95;border-radius:20px;padding:2px 10px;margin:2px}
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}.legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L7</span>
+    <h1>Locales</h1>
+    <div class="sub">Tipificación, modelado detallado y documentación de los locales del edificio (cocinas, baños, palieres, acceso, SUM, gimnasio).</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+    <div style="margin-top:8px">
+      <span class="pill">▲ Corre en paralelo</span>
+      <span class="pill">▲ Cuelga de ARQ detallada (L2)</span>
+      <span class="pill">▲ Realimenta la completitud (L5)</span>
+    </div>
+  </header>
+
+  <div class="flow">
+
+    <div class="inputs">
+      <div class="node entrada"><div class="ttl">Modelo EST</div></div>
+      <div class="node entrada"><div class="ttl">Modelo ARQ</div></div>
+      <div class="node entrada"><div class="ttl">Modelo MEP</div></div>
+      <div class="node entrada"><div class="ttl">Ficha técnica</div></div>
+      <div class="node entrada"><div class="ttl">Planilla de locales</div></div>
+    </div>
+    <div class="doc-note">Puede tener 2 instancias de producción.</div>
+
+    <div class="arrow"></div>
+
+    <!-- DOS ENTRADAS PARALELAS -->
+    <div class="branch">
+      <div class="path">
+        <div class="lbl">A · armado de planos</div>
+        <div class="flow">
+          <div class="node proceso sm"><div class="ttl">Tipificar locales</div></div>
+          <div class="arrow sm"></div>
+          <div class="node proceso sm"><div class="ttl">Armar plano por local</div>
+            <div class="desc">El nombre y numeración de los locales debe coincidir con la planilla de locales.</div></div>
+          <div class="docs">
+            <span class="doc-chip">Cocinas A·B·C</span><span class="doc-chip">Baños A·B·C</span>
+            <span class="doc-chip">Palieres</span><span class="doc-chip">Acceso</span>
+            <span class="doc-chip">SUM</span><span class="doc-chip">Gimnasio</span>
+          </div>
+          <div class="arrow sm"></div>
+          <div class="node reunion sm"><div class="ttl">Revisión</div></div>
+          <div class="loopnote">¿Agregar / sacar local? <b>Sí</b> → vuelve a armar plano. <b>No</b> ↓</div>
+        </div>
+      </div>
+      <div class="path">
+        <div class="lbl">B · definiciones de locales</div>
+        <div class="flow">
+          <div class="node proceso sm"><div class="ttl">Armar checklist de definiciones de locales</div>
+            <div class="desc">Con lo que hay en la ficha técnica y lo que falta.</div></div>
+          <div class="arrow sm"></div>
+          <div class="node draft sm"><div class="ttl">Definiciones de locales / criterios de diseño</div></div>
+          <div class="loopnote">¿OK? <b>No</b> → completar (loop). <b>Sí</b> → habilita el modelado ↓</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <!-- MODELADO -->
+    <div class="node proceso">
+      <span class="tag">Proceso · confluyen A y B</span>
+      <div class="ttl">Modelado detallado</div>
+      <div class="desc">Checklist de modelado y carga de parámetros, design center, definiciones de locales y criterios de diseño.</div>
+    </div>
+    <div class="loopnote">¿Consulta al cliente? <b>Sí</b> → reunión / consulta → ¿respuesta? Si no: <b>bloqueo</b> (insistir, asentar en bitácora). <b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <!-- DOCUMENTACIÓN -->
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Documentación</div>
+      <div class="desc">Checklist de planos de detalles zonales.</div></div>
+    <div class="docs">
+      <span class="doc-chip">Prueba detalle cocinas A</span><span class="doc-chip">Prueba detalle baños A</span>
+      <span class="doc-chip">Prueba detalle palieres</span><span class="doc-chip">Prueba detalle acceso</span>
+      <span class="doc-chip">Prueba detalle SUM</span><span class="doc-chip">Prueba detalle gimnasio</span>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node reunion"><span class="tag">Presentación</span><div class="ttl">Revisión de planos de muestra</div>
+      <ul class="mini"><li>Resolución de consultas surgidas en modelado y documentación</li></ul></div>
+    <div class="loopnote">¿Ajuste? <b>Sí</b> → vuelve a documentación. <b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node proceso"><span class="tag">Entrega</span><div class="ttl">Entrega L7</div></div>
+    <div class="docs">
+      <span class="doc-chip">Plano detalle cocinas A·B·C</span><span class="doc-chip">Plano detalle baños A·B·C</span>
+      <span class="doc-chip">Plano detalle palieres</span><span class="doc-chip">Plano detalle acceso</span>
+      <span class="doc-chip">Plano detalle SUM</span><span class="doc-chip">Plano detalle gimnasio</span>
+    </div>
+    <div class="doc-note"><span class="upd">▲</span> Los artefactos de detalle realimentan la completitud del nivel en L5.</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node reunion"><span class="tag">Revisiones</span><div class="ttl">Design review</div>
+      <ul class="mini"><li>Correcciones por design review</li><li>Máximo de revisiones</li></ul></div>
+    <div class="loopnote">¿Ajuste? <b>Sí</b> → ajuste de documentación + cronograma (gestión de cambios → medición de errores). <b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node cierre"><span class="tag">Fin de etapa</span><div class="ttl">Locales documentados</div></div>
+
+    <div class="changebox"><div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div></div>
+  </div>
+
+  <div class="legend"><h2>Referencias</h2><div class="items">
+    <div class="it"><span class="sw" style="background:var(--entrada)"></span>Entrada</div>
+    <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+    <div class="it"><span class="sw" style="background:var(--draft)"></span>Draft / documento</div>
+    <div class="it"><span class="sw" style="background:var(--reunion)"></span>Reunión</div>
+    <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre</div>
+    <div class="it"><span class="sw" style="background:#e3e8fb;border-color:#b9c4ef"></span>▲ actualizado</div>
+  </div></div>
+
+  <footer class="doc">Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L7 Locales</footer>
+</div>
+
+</section>
+
+<section id="L8" class="sheet">
+<meta charset="utf-8">
+<title>Flujograma L8 · Detalles</title>
+<style>
+  :root{--proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;--tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:560px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12.5px;color:#333;margin-top:4px}
+  .node.sm{max-width:300px;padding:9px 13px}.node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}.draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}.condicional{background:var(--condicional);border-color:#c39dbb}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}.cierre .desc{color:#d8d5cd}
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .arrow{width:2px;height:24px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:16px}
+  .inputs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:760px}.inputs .node{max-width:170px;padding:8px 10px}.inputs .ttl{font-size:12px}
+  .row3{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:760px}
+  .docs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:600px;margin:2px auto 0}
+  .doc-chip{background:#fff;border:1px solid #d8d3c4;border-radius:5px;padding:4px 9px;font-size:11.5px;color:#444}
+  .doc-note{font-size:11px;color:#777;font-style:italic;text-align:center;margin:6px auto 0;max-width:560px}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:520px}.loopnote b{color:#7a4a1a}
+  ul.mini{margin:4px 0 0;padding-left:18px;font-size:12px;color:#333}ul.mini li{margin:1px 0}
+  .pill{display:inline-block;font-size:11px;font-weight:600;color:#3f6e2a;background:#dcecd2;border:1px solid #a9cf95;border-radius:20px;padding:2px 10px;margin:2px}
+  .changebox{max-width:600px;margin:6px auto 0;display:flex;gap:12px;align-items:center;background:var(--cambios);border:1px solid #d9be80;border-radius:8px;padding:11px 14px}
+  .changebox .x{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #b8912f;display:flex;align-items:center;justify-content:center;color:#b8912f;font-size:18px;font-weight:700}
+  .changebox .t{font-size:12px;color:#6a531a}
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}.legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ zoom por lote — L8</span>
+    <h1>Detalles</h1>
+    <div class="sub">Tipificación, parametrización y documentación de carpinterías: puertas, ventanas, barandas y herrerías, con sus planillas.</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+    <div style="margin-top:8px">
+      <span class="pill">▲ Corre en paralelo</span>
+      <span class="pill">▲ Cuelga de ARQ detallada (L2)</span>
+      <span class="pill">▲ Realimenta la completitud (L5)</span>
+    </div>
+  </header>
+
+  <div class="flow">
+
+    <div class="inputs">
+      <div class="node entrada"><div class="ttl">Modelo ARQ</div></div>
+      <div class="node entrada"><div class="ttl">Mod. puertas</div></div>
+      <div class="node entrada"><div class="ttl">Mod. ventanas</div></div>
+      <div class="node entrada"><div class="ttl">Mod. barandas</div></div>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="row3">
+      <div class="node draft sm"><span class="tag">Arranque</span><div class="ttl">Revisión 0 — seguido de L1</div></div>
+      <div class="node draft sm"><span class="tag">Arranque</span><div class="ttl">Revisión 1 — al final de L6</div></div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="row3">
+      <div class="node proceso sm"><div class="ttl">Tipificar puertas</div></div>
+      <div class="node proceso sm"><div class="ttl">Tipificar ventanas</div></div>
+      <div class="node proceso sm"><div class="ttl">Tipificar barandas</div></div>
+    </div>
+    <div class="doc-note">Diferenciar todos los tipos de aberturas y barandas que puede haber.</div>
+
+    <div class="arrow"></div>
+
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Ajuste de modelo</div></div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Cargar parámetros</div>
+      <div class="desc">Nombrar puertas, ventanas y barandas.</div></div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Armar plano por categoría</div>
+      <div class="desc">Todos los planos deben tener plantas generales con designaciones y vistas/detalles de las aberturas y herrerías con medidas.</div></div>
+    <div class="docs">
+      <span class="doc-chip">Ventanas</span><span class="doc-chip">Puertas</span><span class="doc-chip">Barandas</span><span class="doc-chip">Herrerías</span>
+      <span class="doc-chip">Planilla ventanas</span><span class="doc-chip">Planilla puertas</span><span class="doc-chip">Planilla barandas</span>
+    </div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Documentación</div>
+      <div class="desc">Checklist de documentación de carpinterías.</div></div>
+    <div class="docs"><span class="doc-chip">Planos de prueba</span></div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node reunion"><span class="tag">Reunión</span><div class="ttl">Revisión de planos de muestra</div>
+      <ul class="mini"><li>Lectura del plano</li><li>Designaciones de planos</li></ul></div>
+    <div class="loopnote">¿Ajuste? <b>Sí</b> → vuelve a documentación. <b>No</b> ↓</div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node proceso"><span class="tag">Proceso</span><div class="ttl">Finalizar documentación</div></div>
+
+    <div class="arrow sm"></div>
+
+    <div class="node cierre"><span class="tag">Entrega L8</span><div class="ttl">Carpinterías documentadas →</div></div>
+    <div class="docs">
+      <span class="doc-chip">Planilla + plano de ventanas</span>
+      <span class="doc-chip">Planilla + plano de puertas</span>
+      <span class="doc-chip">Planilla + plano de barandas</span>
+      <span class="doc-chip">Plano de herrerías</span>
+    </div>
+    <div class="doc-note"><span class="upd">▲</span> Los artefactos de detalle realimentan la completitud del nivel en L5.</div>
+
+    <div class="changebox"><div class="x">✕</div>
+      <div class="t">Ante un cambio: aplica el <b>diagrama de gestión de cambios</b>. No tomar ese camino sin confirmación formal previa. Dejar asentado en bitácora.</div></div>
+  </div>
+
+  <div class="legend"><h2>Referencias</h2><div class="items">
+    <div class="it"><span class="sw" style="background:var(--entrada)"></span>Entrada</div>
+    <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+    <div class="it"><span class="sw" style="background:var(--draft)"></span>Arranque / documento</div>
+    <div class="it"><span class="sw" style="background:var(--reunion)"></span>Reunión</div>
+    <div class="it"><span class="sw" style="background:var(--cierre)"></span>Entrega</div>
+    <div class="it"><span class="sw" style="background:#e3e8fb;border-color:#b9c4ef"></span>▲ actualizado</div>
+  </div></div>
+
+  <footer class="doc">Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · L8 Detalles</footer>
+</div>
+
+</section>

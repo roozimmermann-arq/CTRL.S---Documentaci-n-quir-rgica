@@ -1,0 +1,169 @@
+<meta charset="utf-8">
+<title>Matriz de modelado · vista completa</title>
+<style>
+  :root{
+    --papel:#f4f3ef;--tinta:#1a1a1a;
+    --ed:#B0724A;--in:#C0392B;--pr:#7B86C4;--ac:#8C6BB1;--li:#4E7A27;--de:#C99A2E;--do:#1B6E63;--na:#CFCABA;
+    --cuant:#1E2A78;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1240px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:14px}
+  header.doc .kick{font-style:italic;color:#555;font-size:13px;letter-spacing:.03em}
+  header.doc h1{font-size:26px;font-weight:600;margin:2px 0 0}
+  header.doc .sub{font-size:13px;color:#555;margin-top:5px;max-width:860px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:#f2e2c0;border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:14px 0 16px}
+  .legend .it{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#444}
+  .legend .sw{width:15px;height:15px;border-radius:3px;border:1px solid rgba(0,0,0,.25)}
+
+  .scroll{overflow-x:auto;border:1px solid #ccc;border-radius:8px;background:#fff}
+  table{border-collapse:collapse;font-size:11px;width:100%}
+  th,td{border:1px solid #e0dccf;text-align:center;white-space:nowrap}
+  thead th{background:#efece3;font-weight:600;color:#333;padding:6px 7px}
+  .grp{background:#e4e0d4 !important;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#555}
+  tbody th{background:#f3f1ea;text-align:left;padding:6px 10px;font-weight:600}
+  tbody tr.general th{background:#e9edf7}
+  td.cell{width:40px;height:30px;color:#fff;font-weight:700;font-size:10px}
+  .rowlbl small{display:block;font-weight:400;color:#888;font-size:9.5px}
+
+  .ed{background:var(--ed)}.in{background:var(--in)}.pr{background:var(--pr)}.ac{background:var(--ac)}
+  .li{background:var(--li)}.de{background:var(--de)}.do{background:var(--do)}
+  .na{background:var(--na);color:#7a7566}
+
+  /* fila cuantificaciones (horizontal, casillero por disciplina) */
+  tr.cuantrow th{background:#e3e8fb;color:var(--cuant)}
+  tr.cuantrow td{background:#eef1fb;height:32px;border-top:2px solid var(--cuant)}
+  tr.cuantrow td.na{background:#e9e7de}
+  .chk{display:inline-block;width:18px;height:18px;border:1.6px solid var(--cuant);border-radius:4px;
+    cursor:pointer;background:#fff;position:relative;vertical-align:middle;transition:.12s}
+  .chk:hover{background:#dfe4fb}
+  .chk.on{background:var(--li);border-color:var(--li)}
+  .chk.on::after{content:"✓";position:absolute;top:-2px;left:2.5px;color:#fff;font-size:14px;font-weight:700}
+
+  .note{background:#fff;border:1px solid #cdd4ee;border-left:4px solid var(--cuant);border-radius:6px;
+    padding:11px 15px;font-size:12.5px;color:#33406e;margin-top:18px;max-width:900px}
+  footer.doc{margin-top:26px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ matriz de modelado — vista completa</span>
+    <h1>Tablero de estados · ejemplo de edificio</h1>
+    <div class="sub">Cada celda tiene uno de 7 estados. Filas: <strong>General (troncal) + cada nivel</strong>. Columnas: disciplinas y sistemas. <strong>Coordinación</strong> es la única columna transversal; <strong>Documentación</strong> no es columna (es el estado DOCUMENTADO).</div>
+    <span class="badge">Reconstruida y actualizada · a validar</span>
+  </header>
+
+  <div class="legend">
+    <div class="it"><span class="sw ed"></span>Espera de draft</div>
+    <div class="it"><span class="sw in"></span>Iniciar</div>
+    <div class="it"><span class="sw pr"></span>En proceso</div>
+    <div class="it"><span class="sw ac"></span>Actualización</div>
+    <div class="it"><span class="sw li"></span>Listo</div>
+    <div class="it"><span class="sw de"></span>Desactualizado</div>
+    <div class="it"><span class="sw do"></span>Documentado</div>
+    <div class="it"><span class="sw na"></span>No aplica</div>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2" style="min-width:140px">Nivel \ Disciplina</th>
+          <th colspan="2" class="grp">ARQ</th>
+          <th colspan="3" class="grp">Estructura</th>
+          <th colspan="7" class="grp">Ingenierías MEP</th>
+          <th rowspan="2">Coordi-<br>nación</th>
+        </tr>
+        <tr>
+          <th>ARQ</th><th>Parám</th>
+          <th>EST gen</th><th>marks</th><th>pases</th>
+          <th>SAN</th><th>AFC</th><th>CMA</th><th>GAS</th><th>ELE</th><th>FPT</th><th>BTE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="general">
+          <th class="rowlbl">General <small>troncal del proyecto</small></th>
+          <td class="cell li">LI</td><td class="cell li">LI</td>
+          <td class="cell li">LI</td><td class="cell na">—</td><td class="cell na">—</td>
+          <td class="cell li">LI</td><td class="cell li">LI</td><td class="cell pr">PR</td><td class="cell pr">PR</td><td class="cell li">LI</td><td class="cell pr">PR</td><td class="cell in">IN</td>
+          <td class="cell pr">PR</td>
+        </tr>
+        <tr>
+          <th class="rowlbl">Azotea</th>
+          <td class="cell pr">PR</td><td class="cell li">LI</td>
+          <td class="cell na">—</td><td class="cell in">IN</td><td class="cell ed">ED</td>
+          <td class="cell pr">PR</td><td class="cell in">IN</td><td class="cell pr">PR</td><td class="cell na">—</td><td class="cell in">IN</td><td class="cell ed">ED</td><td class="cell ed">ED</td>
+          <td class="cell ed">ED</td>
+        </tr>
+        <tr>
+          <th class="rowlbl">P02</th>
+          <td class="cell li">LI</td><td class="cell li">LI</td>
+          <td class="cell na">—</td><td class="cell li">LI</td><td class="cell pr">PR</td>
+          <td class="cell li">LI</td><td class="cell li">LI</td><td class="cell pr">PR</td><td class="cell pr">PR</td><td class="cell li">LI</td><td class="cell pr">PR</td><td class="cell pr">PR</td>
+          <td class="cell pr">PR</td>
+        </tr>
+        <tr>
+          <th class="rowlbl">P01</th>
+          <td class="cell do">DO</td><td class="cell li">LI</td>
+          <td class="cell na">—</td><td class="cell do">DO</td><td class="cell li">LI</td>
+          <td class="cell do">DO</td><td class="cell do">DO</td><td class="cell li">LI</td><td class="cell li">LI</td><td class="cell do">DO</td><td class="cell li">LI</td><td class="cell li">LI</td>
+          <td class="cell do">DO</td>
+        </tr>
+        <tr>
+          <th class="rowlbl">PB <small>P00</small></th>
+          <td class="cell de">DE</td><td class="cell li">LI</td>
+          <td class="cell na">—</td><td class="cell li">LI</td><td class="cell li">LI</td>
+          <td class="cell de">DE</td><td class="cell li">LI</td><td class="cell li">LI</td><td class="cell li">LI</td><td class="cell li">LI</td><td class="cell li">LI</td><td class="cell li">LI</td>
+          <td class="cell de">DE</td>
+        </tr>
+        <tr>
+          <th class="rowlbl">SS <small>S01</small></th>
+          <td class="cell li">LI</td><td class="cell li">LI</td>
+          <td class="cell na">—</td><td class="cell li">LI</td><td class="cell pr">PR</td>
+          <td class="cell li">LI</td><td class="cell pr">PR</td><td class="cell pr">PR</td><td class="cell na">—</td><td class="cell li">LI</td><td class="cell pr">PR</td><td class="cell in">IN</td>
+          <td class="cell pr">PR</td>
+        </tr>
+        <tr>
+          <th class="rowlbl">Fundaciones</th>
+          <td class="cell na">—</td><td class="cell na">—</td>
+          <td class="cell li">LI</td><td class="cell li">LI</td><td class="cell li">LI</td>
+          <td class="cell na">—</td><td class="cell na">—</td><td class="cell na">—</td><td class="cell na">—</td><td class="cell na">—</td><td class="cell na">—</td><td class="cell na">—</td>
+          <td class="cell li">LI</td>
+        </tr>
+
+        <!-- FILA CUANTIFICACIONES · horizontal, casillero por disciplina -->
+        <tr class="cuantrow">
+          <th class="rowlbl">Cuantificaciones 5D <small>por disciplina · generales</small></th>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo ARQ"></span></td>
+          <td class="na"></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo EST (hormigón / acero)"></span></td>
+          <td class="na"></td>
+          <td class="na"></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo SAN"></span></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo AFC"></span></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo CMA"></span></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo GAS"></span></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo ELE"></span></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo FPT"></span></td>
+          <td><span class="chk" onclick="tog(this)" title="Cómputo BTE"></span></td>
+          <td class="na"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <strong>Cuantificaciones (5D).</strong> Se emiten <strong>por disciplina</strong> (un cómputo de hormigón/acero para EST, uno de ARQ, uno por cada instalación) y son <strong>generales</strong> del proyecto, no por nivel. Por eso van en una <strong>fila horizontal</strong> con un <strong>casillero por disciplina</strong>: marcás cada uno a medida que emitís su cómputo. (Parám, EST marks/pases y Coordinación no llevan cómputo.)
+  </div>
+
+  <footer class="doc">
+    Ctrl.S · reforma de lotes + matriz de modelado · vista completa — sin branding
+  </footer>
+</div>
+
+<script>
+  function tog(el){ el.classList.toggle('on'); }
+</script>

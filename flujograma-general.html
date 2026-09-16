@@ -1,0 +1,136 @@
+<meta charset="utf-8">
+<title>Flujograma general · L1 → L8</title>
+<style>
+  :root{--proceso:#bbd0ea;--draft:#f5c99b;--reunion:#bfe3c4;--decision:#d9e2ef;--condicional:#efe0ec;
+    --cambios:#f2e2c0;--cierre:#1a1a1a;--entrada:#e6ede4;--bloqueo:#ecc9c4;--tinta:#1a1a1a;--linea:#8a8a8a;--papel:#f4f3ef;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:16px}
+  header.doc .kick{font-style:italic;letter-spacing:.03em;color:#555;font-size:13px}
+  header.doc h1{margin:2px 0 0;font-size:26px;letter-spacing:-.01em}
+  header.doc .sub{font-size:13.5px;color:#555;margin-top:5px;max-width:820px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:var(--cambios);border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .node{border:1.5px solid rgba(0,0,0,.28);border-radius:8px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;max-width:520px;width:100%}
+  .node .tag{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.55;display:block;margin-bottom:3px}
+  .node .ttl{font-size:14.5px;font-weight:600}
+  .node .desc{font-size:12px;color:#333;margin-top:4px}
+  .node.sm{max-width:340px;padding:9px 13px}.node.sm .ttl{font-size:13px}
+  .proceso{background:var(--proceso)}.draft{background:var(--draft)}
+  .reunion{background:var(--reunion);border-radius:26px}
+  .decision{background:var(--decision);border-style:dashed;text-align:center}
+  .entrada{background:var(--entrada)}.condicional{background:var(--condicional);border-color:#c39dbb;text-align:center}
+  .cierre{background:var(--cierre);color:#f4f3ef;border-color:#000;border-radius:26px;text-align:center}.cierre .desc{color:#d8d5cd}
+  .upd{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#1E2A78;background:#e3e8fb;border:1px solid #b9c4ef;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .arrow{width:2px;height:22px;background:var(--linea);position:relative;margin:0 auto}
+  .arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--linea)}
+  .arrow.sm{height:14px}
+  .row2{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;max-width:560px}.row2 .node{flex:1;min-width:220px}
+  .zone{width:100%;max-width:620px;border:2px solid #9db3d3;border-radius:16px;padding:16px 16px 20px;margin:0 auto;background:#eef3fb}
+  .zone.nivel{border-color:#c39dbb;background:#f7eff5}
+  .zone .zh{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+  .zone .zh .zt{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3a4d78}
+  .zone.nivel .zh .zt{color:#7b4f74}
+  .zone .zn{font-size:11.5px;color:#5a6a8a;text-align:center;margin-bottom:12px;font-style:italic}
+  .zone.nivel .zn{color:#8a6a86}
+  .repeat{font-size:11px;font-weight:700;color:#7b4f74;text-align:center;margin-top:12px;letter-spacing:.03em}
+  .loopnote{font-size:11.5px;color:#8a6a2a;font-style:italic;text-align:center;margin:6px auto 0;max-width:480px}.loopnote b{color:#7a4a1a}
+  .paralelo{width:100%;max-width:620px;margin:16px auto 0;border:1.5px dashed #6bb077;border-radius:12px;padding:12px 14px;background:#f0f7ee}
+  .paralelo .ph{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#3f6e2a;text-align:center;margin-bottom:8px}
+  .legend{margin-top:40px;border-top:1px solid #ccc;padding-top:16px}
+  .legend h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:0 0 10px}
+  .legend .items{display:flex;flex-wrap:wrap;gap:8px 18px}.legend .it{display:flex;align-items:center;gap:7px;font-size:12px;color:#444}
+  .legend .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.25)}
+  footer.doc{margin-top:30px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+  @media print{body{background:#fff;padding:0}.node{box-shadow:none}}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ proceso general</span>
+    <h1>El proceso, de punta a punta — L1 → L8</h1>
+    <div class="sub">Vista general de los 8 lotes. Lo clave: <strong>L1 a L4 corren una vez por proyecto</strong>; de <strong>L5 en adelante el ciclo se repite por cada nivel</strong>. El plano de interferencias es la bisagra que separa coordinar de completar.</div>
+    <span class="badge">Actualizado al proceso vigente · a validar</span>
+  </header>
+
+  <div class="flow">
+
+    <div class="node cierre" style="max-width:300px"><div class="ttl">Proyecto — ARQ / EST</div></div>
+    <div class="arrow"></div>
+
+    <!-- ZONA POR PROYECTO -->
+    <div class="zone">
+      <div class="zh"><span class="zt">■ Una vez · por proyecto</span></div>
+      <div class="flow">
+        <div class="node proceso sm"><span class="tag">L1</span><div class="ttl">Modelo base</div>
+          <div class="desc">Grillas, master, R0. EST general. Cierra con validación del cliente.</div></div>
+        <div class="arrow sm"></div>
+        <div class="row2">
+          <div class="node proceso sm"><span class="tag">L2 · adelantable</span><div class="ttl">Detallado ARQ + parámetros</div><div class="desc">Sin EST.</div></div>
+          <div class="node draft sm"><span class="tag">L3</span><div class="ttl">Ingenierías 2D</div><div class="desc">Draft + asesores.</div></div>
+        </div>
+        <div class="arrow sm"></div>
+        <div class="node proceso sm"><span class="tag">L4</span><div class="ttl">Ingenierías 3D — modelo troncal</div>
+          <div class="desc">Rama condicional EST interna. Los asesores vuelven.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node condicional sm"><span class="tag">Barrera · en L4</span><div class="ttl">¿EST del nivel modelada? → habilita coordinar</div></div>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+    <div class="repeat">▼ de acá en más, el ciclo se repite para CADA NIVEL ▼</div>
+    <div class="arrow sm"></div>
+
+    <!-- ZONA POR NIVEL -->
+    <div class="zone nivel">
+      <div class="zh"><span class="zt">◆ Se repite · por nivel</span></div>
+      <div class="flow">
+        <div class="node proceso sm"><span class="tag">L5 · coordinación</span><div class="ttl">Coordinación del nivel</div>
+          <div class="desc">Checklist + resolución de interferencias.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node draft sm" style="border-color:#c99a2e;border-width:2px"><span class="tag">Bisagra</span>
+          <div class="ttl">Documentar coordinación — plano de interferencias</div>
+          <div class="desc">Coordinación LISTA + documentada → habilita el detalle.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node proceso sm"><span class="tag">L5 · completitud</span><div class="ttl">Modelado detallado</div>
+          <div class="desc">Completitud ing. + ARQ, + pases + marks de EST.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node cierre sm" style="background:#1b6e63;border-color:#134f47"><span class="tag" style="opacity:.7">L6</span><div class="ttl">Documentación</div>
+          <div class="desc">Un plano por celda (ing. + ARQ) del nivel.</div></div>
+        <div class="arrow sm"></div>
+        <div class="node decision sm"><div class="ttl">¿Todas las celdas documentadas?</div></div>
+        <div class="loopnote"><b>No</b> → sigue documentando. &nbsp;<b>Sí</b> ↓</div>
+        <div class="arrow sm"></div>
+        <div class="node cierre sm"><span class="tag" style="opacity:.7">Cierre</span><div class="ttl">Nivel cerrado — se congela</div>
+          <div class="desc">Cambio posterior = extra-contractual.</div></div>
+        <div class="repeat">↺ volver a L5 con el siguiente nivel</div>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+    <div class="node cierre" style="max-width:220px"><div class="ttl">Fin</div><div class="desc">Todos los niveles cerrados.</div></div>
+
+    <!-- PARALELO L7/L8 -->
+    <div class="paralelo">
+      <div class="ph">En paralelo · cuelgan de la ARQ detallada (L2)</div>
+      <div class="row2" style="max-width:100%">
+        <div class="node proceso sm"><span class="tag">L7</span><div class="ttl">Locales</div><div class="desc">Cocinas, baños, palieres, acceso, SUM, gimnasio.</div></div>
+        <div class="node proceso sm"><span class="tag">L8</span><div class="ttl">Detalles</div><div class="desc">Carpinterías + herrerías.</div></div>
+      </div>
+      <div class="loopnote" style="color:#3f6e2a">Sus artefactos <b>realimentan la completitud</b> del nivel en L5.</div>
+    </div>
+
+  </div>
+
+  <div class="legend"><h2>Referencias</h2><div class="items">
+    <div class="it"><span class="sw" style="background:#eef3fb;border-color:#9db3d3"></span>Por proyecto (una vez)</div>
+    <div class="it"><span class="sw" style="background:#f7eff5;border-color:#c39dbb"></span>Por nivel (se repite)</div>
+    <div class="it"><span class="sw" style="background:var(--proceso)"></span>Proceso</div>
+    <div class="it"><span class="sw" style="background:var(--draft);border-color:#c99a2e"></span>Draft / bisagra</div>
+    <div class="it"><span class="sw" style="background:#1b6e63"></span>Documentación</div>
+    <div class="it"><span class="sw" style="background:var(--cierre)"></span>Cierre</div>
+  </div></div>
+
+  <footer class="doc">Flujograma técnico — sin branding · Ctrl.S · reforma de lotes + matriz de modelado · Proceso general L1 → L8</footer>
+</div>

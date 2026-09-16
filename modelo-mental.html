@@ -1,0 +1,86 @@
+<meta charset="utf-8">
+<title>Modelo mental · proceso de documentación ejecutiva</title>
+<style>
+  :root{--papel:#f4f3ef;--tinta:#1a1a1a;--azul:#1E2A78;--proyecto:#dfe7f6;--proyectoB:#8fa6d0;
+    --nivel:#f3e6f0;--nivelB:#c39dbb;--para:#e6f0e2;--paraB:#8ec08a;--cierre:#1a1a1a;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    line-height:1.4;padding:40px 24px 60px}
+  .wrap{max-width:860px;margin:0 auto}
+  .kick{font-style:italic;color:#666;font-size:13px;letter-spacing:.03em}
+  h1{font-size:30px;font-weight:600;letter-spacing:-.01em;margin:4px 0 2px}
+  .oneliner{font-size:18px;color:var(--azul);font-weight:600;margin:14px 0 30px;padding:16px 20px;
+    background:#fff;border-left:4px solid var(--azul);border-radius:6px}
+  .cols{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+  .card{flex:1;min-width:300px;border-radius:14px;padding:20px 22px;border:2px solid}
+  .card.proyecto{background:var(--proyecto);border-color:var(--proyectoB)}
+  .card.nivel{background:var(--nivel);border-color:var(--nivelB)}
+  .card .n{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+  .card.proyecto .n{color:#3a4d78}.card.nivel .n{color:#7b4f74}
+  .card h2{font-size:20px;font-weight:600;margin-bottom:3px}
+  .card .sub{font-size:13px;color:#555;font-style:italic;margin-bottom:14px}
+  .step{display:flex;gap:10px;align-items:flex-start;margin:9px 0;font-size:14px}
+  .step .b{flex:0 0 auto;font-weight:700;background:#fff;border:1px solid rgba(0,0,0,.18);border-radius:6px;
+    padding:1px 8px;font-size:12px;min-width:30px;text-align:center}
+  .step .tx b{font-weight:600}
+  .frozen{margin-top:14px;font-size:13px;color:#7b4f74;font-weight:600}
+  .para{background:var(--para);border:2px dashed var(--paraB);border-radius:14px;padding:16px 22px;margin-bottom:28px}
+  .para .n{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#3f6e2a;margin-bottom:6px}
+  .para .row{display:flex;gap:26px;flex-wrap:wrap;font-size:14px}
+  .anclas{background:#fff;border:1px solid #ddd;border-radius:14px;padding:20px 24px}
+  .anclas h3{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:#666;margin-bottom:12px}
+  .anclas ol{padding-left:20px}
+  .anclas li{margin:8px 0;font-size:14.5px}
+  .anclas li b{color:var(--azul)}
+  footer{margin-top:26px;font-size:11.5px;color:#999;text-align:center;font-style:italic}
+  @media print{body{background:#fff}}
+</style>
+
+<div class="wrap">
+  <div class="kick">/ modelo mental — documentación ejecutiva</div>
+  <h1>El proceso en una cabeza</h1>
+
+  <div class="oneliner">Armás el edificio una vez. Después lo cerrás piso por piso.</div>
+
+  <div class="cols">
+    <div class="card proyecto">
+      <div class="n">■ Se hace una vez</div>
+      <h2>Por proyecto</h2>
+      <div class="sub">Modelar todo el edificio</div>
+      <div class="step"><span class="b">L1</span><span class="tx">El <b>esqueleto</b>: grillas + estructura + lo aprueba el cliente</span></div>
+      <div class="step"><span class="b">L2</span><span class="tx">Arquitectura al <b>detalle</b></span></div>
+      <div class="step"><span class="b">L3</span><span class="tx">Ingenierías en <b>2D</b> (con asesores)</span></div>
+      <div class="step"><span class="b">L4</span><span class="tx">Ingenierías en <b>3D</b> (modelo troncal)</span></div>
+      <div class="frozen" style="color:#3a4d78">→ el edificio listo para coordinar</div>
+    </div>
+
+    <div class="card nivel">
+      <div class="n">◆ Se repite en cada piso</div>
+      <h2>Por nivel</h2>
+      <div class="sub">Cerrar cada uno</div>
+      <div class="step"><span class="b">L5</span><span class="tx"><b>Coordinar</b> (que nada choque) → <b>plano de interferencias = la bisagra</b> → completar el detalle</span></div>
+      <div class="step"><span class="b">L6</span><span class="tx"><b>Documentar</b> los planos finales del piso</span></div>
+      <div class="frozen">Piso cerrado = se congela · cambiar después = plata extra</div>
+    </div>
+  </div>
+
+  <div class="para">
+    <div class="n">▚ Por afuera, en paralelo</div>
+    <div class="row">
+      <div><b>L7 · Locales</b> — cocinas, baños, palieres…</div>
+      <div><b>L8 · Detalles</b> — carpinterías y herrerías</div>
+    </div>
+    <div style="font-size:12.5px;color:#3f6e2a;margin-top:8px;font-style:italic">Cuelgan de la arquitectura y realimentan la completitud de cada nivel.</div>
+  </div>
+
+  <div class="anclas">
+    <h3>Tres anclas para no perderte</h3>
+    <ol>
+      <li><b>La estructura manda:</b> hasta que la EST del nivel no está modelada, no se coordina.</li>
+      <li><b>La bisagra</b> (plano de interferencias) es el punto de no retorno: separa <i>coordinar</i> de <i>detallar</i>.</li>
+      <li><b>La unidad que cierra es el NIVEL</b>, no el lote.</li>
+    </ol>
+  </div>
+
+  <footer>Ctrl.S · reforma de lotes — versión simplificada para tener en la cabeza</footer>
+</div>

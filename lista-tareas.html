@@ -1,0 +1,339 @@
+<meta charset="utf-8">
+<title>Lista de tareas maestra · alimenta la matriz</title>
+<style>
+  :root{--papel:#f4f3ef;--tinta:#1a1a1a;
+    --input:#e6c9c4;--tarea:#bbd0ea;--defin:#c7e0bd;--entreg:#f3e3b0;--cuant:#1E2A78;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--papel);color:var(--tinta);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.35;padding:32px 22px 60px}
+  .wrap{max-width:1180px;margin:0 auto}
+  header.doc{border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:14px}
+  header.doc .kick{font-style:italic;color:#555;font-size:13px;letter-spacing:.03em}
+  header.doc h1{font-size:26px;font-weight:600;margin:2px 0 0}
+  header.doc .sub{font-size:13px;color:#555;margin-top:5px;max-width:900px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;color:#8a5a1a;background:#f2e2c0;border:1px solid #d9be80;border-radius:4px;padding:2px 8px;margin-top:9px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:14px 0 18px;font-size:12px;color:#444}
+  .legend .it{display:flex;align-items:center;gap:6px}
+  .legend .sw{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.25)}
+
+  .lote{margin-bottom:26px}
+  .lote h2{font-size:16px;color:#1E2A78;border-bottom:1px solid #cbd2e6;padding-bottom:5px;margin-bottom:2px}
+  .lote .ld{font-size:12px;color:#777;font-style:italic;margin-bottom:10px}
+  table{border-collapse:collapse;width:100%;font-size:12px}
+  th,td{border:1px solid #e0dccf;padding:5px 9px;text-align:left;vertical-align:top}
+  thead th{background:#efece3;font-weight:600;font-size:11px}
+  td.n{text-align:center;color:#999;width:26px}
+  .disc{text-align:center;font-weight:600}
+  .tipo{text-align:center;white-space:nowrap;font-size:10.5px;font-weight:600;border-radius:4px}
+  .t-input{background:var(--input)}.t-tarea{background:var(--tarea)}.t-defin{background:var(--defin)}.t-entreg{background:var(--entreg)}
+  .t-io{background:#e9cfa6;border:1px dashed #b8863f}
+  .alc{text-align:center;font-size:11px;color:#555;white-space:nowrap}
+  .feed{font-size:11px;color:#33406e}
+  .grouprow td{background:#f3f1ea;font-weight:600;font-size:11px;color:#555;letter-spacing:.03em}
+  footer.doc{margin-top:26px;font-size:11.5px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <span class="kick">/ lista de tareas maestra — alimenta la matriz</span>
+    <h1>Tareas por lote · L1–L8</h1>
+    <div class="sub">Cada fila del full kit clasificada por <strong>tipo</strong>, <strong>disciplina</strong> (→ columna de la matriz) y <strong>alcance</strong> (→ fila General o por nivel), con el <strong>estado que dispara</strong>. Numeración nueva (8 lotes). Las tareas de modelado de ARQ y EST siguen los <a href="protocolos-modelado.html" style="color:#1E2A78">protocolos de modelado</a> (instructivo paso a paso).</div>
+    <span class="badge">Lista completa · a validar · faltan sumar protocolos de modelado por disciplina</span>
+  </header>
+
+  <div class="legend">
+    <div class="it"><span class="sw t-input"></span>Input (de cliente/asesor)</div>
+    <div class="it"><span class="sw t-tarea"></span>Tarea interna</div>
+    <div class="it"><span class="sw t-defin"></span>Definición / Verificación</div>
+    <div class="it"><span class="sw t-entreg"></span>Entregable (plano)</div>
+    <div class="it"><span class="sw t-io"></span>Input/Output (planilla que alimenta cuantificaciones)</div>
+  </div>
+
+  <!-- ===== TAREA 0 · HABILITACIÓN DE ARCHIVOS ===== -->
+  <div class="lote">
+    <h2>Tarea 0 · Habilitación de archivos Revit <span style="font-size:12px;color:#8a5a1a;font-weight:600">— arranque de cada lote</span></h2>
+    <div class="ld">Antes de modelar o documentar hay que <strong>habilitar los archivos de Revit</strong>: dónde se <strong>modela</strong> = archivo por nivel y sistema; dónde se <strong>documenta</strong> = master federado del sistema. Es el <strong>primer paso de cada protocolo</strong>, se dispara al abrir el lote.</div>
+    <table>
+      <thead><tr><th style="width:90px">Al abrir</th><th style="width:140px">Sistema</th><th>Archivo de modelo <span style="font-weight:400;color:#888">(por nivel y sistema)</span></th><th>Master / documentación <span style="font-weight:400;color:#888">(federado)</span></th></tr></thead>
+      <tbody>
+        <tr class="grouprow"><td colspan="4">L1 — base ARQ + EST · «picos y palas» + masters <span style="font-weight:400;font-style:italic">(a futuro L1 se divide en ARQ base y EST base)</span></td></tr>
+        <tr><td class="disc">L1</td><td class="disc">ARQ</td><td>Habilitar modelo ARQ</td><td>Habilitar master ARQ</td></tr>
+        <tr><td class="disc">L1</td><td class="disc">EST</td><td>Habilitar modelo EST</td><td>Habilitar master EST</td></tr>
+        <tr class="grouprow"><td colspan="4">L4 — cada ingeniería (modelo por nivel + su master)</td></tr>
+        <tr><td class="disc">L4</td><td class="disc">SAN</td><td>Habilitar modelo SAN</td><td>Habilitar master SAN</td></tr>
+        <tr><td class="disc">L4</td><td class="disc">AFC</td><td>Habilitar modelo AFC</td><td>Habilitar master AFC</td></tr>
+        <tr><td class="disc">L4</td><td class="disc">CMA</td><td>Habilitar modelo CMA</td><td>Habilitar master CMA</td></tr>
+        <tr><td class="disc">L4</td><td class="disc">GAS</td><td>Habilitar modelo GAS</td><td>Habilitar master GAS</td></tr>
+        <tr><td class="disc">L4</td><td class="disc">FPT</td><td>Habilitar modelo FPT</td><td>Habilitar master FPT</td></tr>
+        <tr><td class="disc">L4</td><td class="disc">ELE / ILU / BTE</td><td>Habilitar modelo ELE/ILU/BTE <span style="color:#888;font-style:italic">(los tres juntos)</span></td><td>Habilitar master ELE/ILU/BTE</td></tr>
+        <tr class="grouprow"><td colspan="4">L5 — coordinación</td></tr>
+        <tr><td class="disc">L5</td><td class="disc">Coord.</td><td colspan="2">Habilitar <strong>MASTER DE PISO</strong> (federado por piso): reúne todos los modelos del piso; se coordina y se documenta ahí mismo</td></tr>
+      </tbody>
+    </table>
+    <div style="background:#fff;border:1px solid #e3d7a8;border-left:4px solid #d9be80;border-radius:6px;padding:9px 13px;font-size:11.5px;color:#5a4a1a;margin-top:8px">
+      Cada «Habilitar…» es el paso inicial del protocolo de ese sistema (crear desde template, vincular, setear vistas). Se marca como hecho antes de arrancar a modelar/documentar.
+    </div>
+  </div>
+
+  <!-- ===== L1 ===== -->
+  <div class="lote">
+    <h2>L1 · Modelo base</h2>
+    <div class="ld">Del kit viejo «L1 Modelo Arq + Est» (base). Alcance: General del proyecto → alimenta la fila General de la matriz. <strong>Arranca con la Tarea 0</strong>: habilitar archivos ARQ y EST (modelo + master).</div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Tarea</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr class="grouprow"><td colspan="6">ARQ · Inputs</td></tr>
+        <tr><td class="n">1</td><td>Anteproyecto de arquitectura (CAD o Revit)</td><td class="tipo t-input">Input</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">precondición ARQ gral</td></tr>
+        <tr><td class="n">2</td><td>Mensura final</td><td class="tipo t-input">Input</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">precondición</td></tr>
+        <tr><td class="n">3</td><td>Niveles de cordón y vereda</td><td class="tipo t-input">Input</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">precondición</td></tr>
+        <tr><td class="n">4</td><td>Ubicación de cero de proyecto y NSL losa sobre 1 SS (PB)</td><td class="tipo t-input">Input</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">precondición</td></tr>
+        <tr><td class="n">5</td><td>Escaleras: huella y contrahuella máx</td><td class="tipo t-input">Input</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">precondición</td></tr>
+
+        <tr class="grouprow"><td colspan="6">ARQ · Tareas internas (base)</td></tr>
+        <tr><td class="n">6</td><td>Poner en sistema (draft + model)</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral → En proceso</td></tr>
+        <tr><td class="n">7</td><td>Definir ejes y grillas</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral → En proceso</td></tr>
+        <tr><td class="n">8</td><td>Estudiar plenos y asignarlos</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">9</td><td>Revisar niveles de proyecto y alturas libres</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">10</td><td>Revisar espesores de contrapiso (según sistemas y terminación)</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">11</td><td>Verificar acceso, pendiente y ancho de rampa</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">12</td><td>Verificar niveles de escaleras, huella y contrahuella máx</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral → Listo</td></tr>
+
+        <tr class="grouprow"><td colspan="6">EST · Inputs (estructura general)</td></tr>
+        <tr><td class="n">13</td><td>Proyecto estructural municipal</td><td class="tipo t-input">Input</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">precondición EST gral</td></tr>
+        <tr><td class="n">14</td><td>Modelo estructural listo (asesor)</td><td class="tipo t-input">Input</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">precondición EST gral</td></tr>
+        <tr><td class="n">15</td><td>Master cuantificación EST</td><td class="tipo t-input">Input</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">precond. · liga cuantif. EST</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== L2 ===== -->
+  <div class="lote">
+    <h2>L2 · Detallado ARQ + parámetros</h2>
+    <div class="ld">Kit viejo «L1» (detalle + planillas) <strong>+ Protocolo de modelado ARQ · LOD 300+</strong>. Alcance: General → fila General. Ya sin EST. <em>Este protocolo se reutiliza por nivel en el modelado detallado de L5.</em> · <a href="protocolos-modelado.html#muros" style="color:#1E2A78">ver protocolos operativos ARQ</a></div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Tarea</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr class="grouprow"><td colspan="6">L2.1 · ARQ detallada — Protocolo de modelado (LOD 300+ · qué modelar)</td></tr>
+        <tr><td class="n">1</td><td>Muros: núcleo + revestimientos como capas separadas vinculadas con constraint («candadito»), en TODOS los muros; tipos y espesores diferenciados por nombre de tipo/layer</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">2</td><td>Tabiques divisorios (no estructurales)</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">3</td><td>Revestimientos de muros y pisos (cerámicos, porcelanatos, etc.), diferenciados</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">4</td><td>Cielorrasos por ambiente: altura y local; tipo y materialidad</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">5</td><td>Solados/pisos: tipos de suelo por ambiente, diferenciados</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">6</td><td>Zócalos</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">7</td><td>Ventanas y puertas: tipo correcto, medidas reales y sentido de apertura; antepechos y dinteles</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral · insumo L8</td></tr>
+        <tr><td class="n">8</td><td>Cocinas: muebles bajo mesada, alacenas, mesada, bacha y artefactos (anafe, horno) según familia provista</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral · insumo L7</td></tr>
+        <tr><td class="n">9</td><td>Baños: artefactos (inodoro, bidet, lavatorio, ducha/bañera), mueble bajo bacha, mesada y nichos</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral · insumo L7</td></tr>
+        <tr><td class="n">10</td><td>Mobiliario fijo: placares, vestidores</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">11</td><td>Escaleras: medidas reales (pedada/alzada), con barandas y pasamanos</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">12</td><td>Rampas con pendientes; barandas, pasamanos, parapetos y antepechos; balcones</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">13</td><td>Rejillas y aberturas de ventilación arquitectónicas</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral</td></tr>
+        <tr><td class="n">14</td><td>Cotas de nivel por planta; nombres de habitaciones/locales</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">ARQ gral · insumo L7</td></tr>
+
+        <tr class="grouprow"><td colspan="6">L2.2 · Parámetros / planillas (cierra L2)</td></tr>
+        <tr><td class="n">15</td><td>Cargar parámetros del modelo: tipo y espesor de muro, material de revestimiento, tipo de piso/solado, tipo y medida de abertura, nombre de local, cota de nivel</td><td class="tipo t-tarea">Tarea</td><td class="disc">Parám</td><td class="alc">General</td><td class="feed">Parám ARQ → Listo</td></tr>
+        <tr><td class="n">16</td><td>Planilla de materialización de proyecto (define materiales y parámetros)</td><td class="tipo t-io">In/Out</td><td class="disc">Parám</td><td class="alc">General</td><td class="feed">input → alimenta cuantificaciones 5D → se emite como output · cond. documentar ARQ</td></tr>
+        <tr><td class="n">17</td><td>Planilla de locales</td><td class="tipo t-io">In/Out</td><td class="disc">Parám</td><td class="alc">General</td><td class="feed">input → alimenta cuantif. 5D (cómputo SD) → output · insumo L7</td></tr>
+        <tr><td class="n">18</td><td>Planilla de artefactos</td><td class="tipo t-io">In/Out</td><td class="disc">Parám</td><td class="alc">General</td><td class="feed">input → alimenta cuantif. 5D → output</td></tr>
+      </tbody>
+    </table>
+    <div style="background:#fff;border:1px solid #cdd4ee;border-left:4px solid #1E2A78;border-radius:6px;padding:10px 14px;font-size:11.5px;color:#33406e;margin-top:8px">
+      <strong>Criterios del protocolo ARQ.</strong> Muro núcleo + revestimiento con «candadito» (no muro multicapa único). Usa <strong>familias provistas</strong>, no las crea. <strong>No toma decisiones</strong>: modela según el CAD ARQ. Nivel de detalle alto: nichos, zócalos, muebles de cocina y baño bien resueltos, aberturas con tipo y medida correctos.
+    </div>
+  </div>
+
+  <!-- ===== L3 ===== -->
+  <div class="lote">
+    <h2>L3 · Ingenierías 2D</h2>
+    <div class="ld">Kit viejo «L2 MEP 2D / Draft» — definiciones técnicas por disciplina, cerradas con asesores. Tipo: Definición. Alcance: General → fila General. Cada grupo lleva su disciplina a <em>Listo</em> en 2D.</div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Definición / Verificación</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr class="grouprow"><td colspan="6">ESTRUCTURAS</td></tr>
+        <tr><td class="n">1</td><td>Niveles superestructura</td><td class="tipo t-defin">Def.</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">EST 2D → Listo</td></tr>
+        <tr><td class="n">2</td><td>Niveles subsuelo</td><td class="tipo t-defin">Def.</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">EST 2D</td></tr>
+        <tr><td class="n">3</td><td>Continuidad estructural (desde N1) en PB y SS</td><td class="tipo t-defin">Def.</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">EST 2D</td></tr>
+        <tr><td class="n">4</td><td>Verificar apeos</td><td class="tipo t-defin">Def.</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">EST 2D</td></tr>
+        <tr><td class="n">5</td><td>Verificar bajorrecorrido y sobrerrecorrido</td><td class="tipo t-defin">Def.</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">EST 2D</td></tr>
+        <tr><td class="n">6</td><td>Altura libre en cocheras</td><td class="tipo t-defin">Def.</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">EST 2D</td></tr>
+        <tr><td class="n">7</td><td>Espacio libre de estacionamiento</td><td class="tipo t-defin">Def.</td><td class="disc">EST</td><td class="alc">General</td><td class="feed">EST 2D</td></tr>
+        <tr class="grouprow"><td colspan="6">SANITARIAS</td></tr>
+        <tr><td class="n">8</td><td>Continuidad de plenos y plenos disponibles</td><td class="tipo t-defin">Def.</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN 2D → Listo</td></tr>
+        <tr><td class="n">9</td><td>Salida pluvial PB</td><td class="tipo t-defin">Def.</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN 2D</td></tr>
+        <tr><td class="n">10</td><td>Desagüe pluvial balcones</td><td class="tipo t-defin">Def.</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN 2D</td></tr>
+        <tr><td class="n">11</td><td>Interceptor de naftas</td><td class="tipo t-defin">Def.</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN 2D</td></tr>
+        <tr><td class="n">12</td><td>Ubicación de pozos de bombeo</td><td class="tipo t-defin">Def.</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN 2D</td></tr>
+        <tr class="grouprow"><td colspan="6">AGUA (AFC)</td></tr>
+        <tr><td class="n">13</td><td>Sala de máquinas subsuelos</td><td class="tipo t-defin">Def.</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC 2D → Listo</td></tr>
+        <tr><td class="n">14</td><td>Sala de máquinas azotea + presurización</td><td class="tipo t-defin">Def.</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC 2D</td></tr>
+        <tr><td class="n">15</td><td>Montantes</td><td class="tipo t-defin">Def.</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC 2D</td></tr>
+        <tr><td class="n">16</td><td>Sala de bombeo</td><td class="tipo t-defin">Def.</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC 2D</td></tr>
+        <tr><td class="n">17</td><td>Ubicación reserva de incendio</td><td class="tipo t-defin">Def.</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC 2D · liga FPT</td></tr>
+        <tr><td class="n">18</td><td>Tipo: agua central / individual / gas / eléctrico</td><td class="tipo t-defin">Def.</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC 2D</td></tr>
+        <tr><td class="n">19</td><td>Qué pisos se presurizan y cómo</td><td class="tipo t-defin">Def.</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC 2D</td></tr>
+        <tr class="grouprow"><td colspan="6">ELÉCTRICAS</td></tr>
+        <tr><td class="n">20</td><td>Plenos eléctricos</td><td class="tipo t-defin">Def.</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE 2D → Listo</td></tr>
+        <tr><td class="n">21</td><td>Sala de medidores o nicho en vereda</td><td class="tipo t-defin">Def.</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE 2D</td></tr>
+        <tr><td class="n">22</td><td>Caja y buzón</td><td class="tipo t-defin">Def.</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE 2D</td></tr>
+        <tr><td class="n">23</td><td>Info para gestión de factibilidad</td><td class="tipo t-defin">Def.</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE 2D</td></tr>
+        <tr><td class="n">24</td><td>Cámara transformadora — ¿de quién es?</td><td class="tipo t-defin">Def.</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE 2D</td></tr>
+        <tr><td class="n">25</td><td>¿Domótica?</td><td class="tipo t-defin">Def.</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE 2D · liga BTE</td></tr>
+        <tr class="grouprow"><td colspan="6">INCENDIO (FPT)</td></tr>
+        <tr><td class="n">26</td><td>Ubicación nicho hidrante y matafuego</td><td class="tipo t-defin">Def.</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT 2D → Listo</td></tr>
+        <tr><td class="n">27</td><td>Reserva de incendio</td><td class="tipo t-defin">Def.</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT 2D</td></tr>
+        <tr><td class="n">28</td><td>Separado de medianera</td><td class="tipo t-defin">Def.</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT 2D</td></tr>
+        <tr><td class="n">29</td><td>Mismo nivel fondo tanque y bomba</td><td class="tipo t-defin">Def.</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT 2D</td></tr>
+        <tr><td class="n">30</td><td>Sprinklers — ¿van o no?</td><td class="tipo t-defin">Def.</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT 2D</td></tr>
+        <tr class="grouprow"><td colspan="6">TERMOMECÁNICAS (CMA)</td></tr>
+        <tr><td class="n">31</td><td>Pleno cove ventilación palier</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D → Listo</td></tr>
+        <tr><td class="n">32</td><td>Continuidad plenos cove ventilación baños</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr><td class="n">33</td><td>Diseño ventilaciones SS</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr><td class="n">34</td><td>Ubicación AA</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr><td class="n">35</td><td>Tipo de calefacción</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr><td class="n">36</td><td>Si van radiadores</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr><td class="n">37</td><td>¿Purificador o extractor?</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr><td class="n">38</td><td>¿Parrillas?</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr><td class="n">39</td><td>Presurización de escaleras</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D · liga FPT</td></tr>
+        <tr><td class="n">40</td><td>Claraboya escalera</td><td class="tipo t-defin">Def.</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA 2D</td></tr>
+        <tr class="grouprow"><td colspan="6">GAS</td></tr>
+        <tr><td class="n">41</td><td>Ubicación medidores gas</td><td class="tipo t-defin">Def.</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS 2D → Listo</td></tr>
+        <tr><td class="n">42</td><td>Ubicación pleno de gas</td><td class="tipo t-defin">Def.</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS 2D</td></tr>
+        <tr><td class="n">43</td><td>Ventilaciones de artefactos con gas</td><td class="tipo t-defin">Def.</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS 2D</td></tr>
+        <tr><td class="n">44</td><td>Ubicación medidor y regulador sobre LO</td><td class="tipo t-defin">Def.</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS 2D</td></tr>
+        <tr><td class="n">45</td><td>¿Cocinas a gas o anafes?</td><td class="tipo t-defin">Def.</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS 2D · liga ARQ cocinas</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== L4 ===== -->
+  <div class="lote">
+    <h2>L4 · Ingenierías 3D</h2>
+    <div class="ld">Kit viejo «L3 MEP 3D / Modelo» — modelado troncal por sistema. Tipo: Tarea. Alcance: General (troncal) → fila General. Cada grupo lleva su sistema a <em>Listo</em> en 3D. <strong>Arranca con la Tarea 0</strong>: habilitar el archivo de modelo y el master de cada ingeniería.</div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Tarea de modelado</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr class="grouprow"><td colspan="6">SANITARIAS</td></tr>
+        <tr><td class="n">1</td><td>Bajadas cloacales principales</td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN troncal → Listo</td></tr>
+        <tr><td class="n">2</td><td>Ubicación de ramal 87°30' con ventilación</td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN troncal</td></tr>
+        <tr><td class="n">3</td><td>Codo con acometida horizontal para inodoro</td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN troncal</td></tr>
+        <tr><td class="n">4</td><td>Ubicación de PPA y conexión a descarga</td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN troncal</td></tr>
+        <tr><td class="n">5</td><td>Bajadas pluviales y conexión con embudos</td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN troncal</td></tr>
+        <tr><td class="n">6</td><td>Conexión cloacal a acometida DP</td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN troncal</td></tr>
+        <tr><td class="n">7</td><td>Conexión pluvial en vereda</td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">General</td><td class="feed">SAN troncal</td></tr>
+        <tr class="grouprow"><td colspan="6">TERMOMECÁNICAS (CMA)</td></tr>
+        <tr><td class="n">8</td><td>Termomecánicas SS</td><td class="tipo t-tarea">Tarea</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA troncal → Listo</td></tr>
+        <tr><td class="n">9</td><td>Cove ventilación palier</td><td class="tipo t-tarea">Tarea</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA troncal</td></tr>
+        <tr><td class="n">10</td><td>Cove ventilación baños</td><td class="tipo t-tarea">Tarea</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA troncal</td></tr>
+        <tr><td class="n">11</td><td>AA — ubicación condensadoras</td><td class="tipo t-tarea">Tarea</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA troncal</td></tr>
+        <tr><td class="n">12</td><td>Cocinas con extracción</td><td class="tipo t-tarea">Tarea</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA troncal</td></tr>
+        <tr><td class="n">13</td><td>Si hay piso radiante</td><td class="tipo t-tarea">Tarea</td><td class="disc">CMA</td><td class="alc">General</td><td class="feed">CMA troncal</td></tr>
+        <tr class="grouprow"><td colspan="6">INCENDIO (FPT)</td></tr>
+        <tr><td class="n">14</td><td>Conexión desde tanque de incendio</td><td class="tipo t-tarea">Tarea</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT troncal → Listo</td></tr>
+        <tr><td class="n">15</td><td>Montante y ubicación de nichos</td><td class="tipo t-tarea">Tarea</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT troncal</td></tr>
+        <tr><td class="n">16</td><td>Sprinklers</td><td class="tipo t-tarea">Tarea</td><td class="disc">FPT</td><td class="alc">General</td><td class="feed">FPT troncal</td></tr>
+        <tr class="grouprow"><td colspan="6">AGUA (AFC)</td></tr>
+        <tr><td class="n">17</td><td>Tanques sala de máquinas</td><td class="tipo t-tarea">Tarea</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC troncal → Listo</td></tr>
+        <tr><td class="n">18</td><td>Termotanques o calderas</td><td class="tipo t-tarea">Tarea</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC troncal</td></tr>
+        <tr><td class="n">19</td><td>Colectores</td><td class="tipo t-tarea">Tarea</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC troncal</td></tr>
+        <tr><td class="n">20</td><td>Montantes</td><td class="tipo t-tarea">Tarea</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC troncal</td></tr>
+        <tr><td class="n">21</td><td>Distribuciones hasta unidades</td><td class="tipo t-tarea">Tarea</td><td class="disc">AFC</td><td class="alc">General</td><td class="feed">AFC troncal</td></tr>
+        <tr class="grouprow"><td colspan="6">ELÉCTRICAS</td></tr>
+        <tr><td class="n">22</td><td>Bocas de iluminación</td><td class="tipo t-tarea">Tarea</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE troncal → Listo</td></tr>
+        <tr><td class="n">23</td><td>Tomas</td><td class="tipo t-tarea">Tarea</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE troncal</td></tr>
+        <tr><td class="n">24</td><td>Interruptores</td><td class="tipo t-tarea">Tarea</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE troncal</td></tr>
+        <tr><td class="n">25</td><td>Bocas de emergencia</td><td class="tipo t-tarea">Tarea</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE troncal</td></tr>
+        <tr><td class="n">26</td><td>Tableros</td><td class="tipo t-tarea">Tarea</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE troncal</td></tr>
+        <tr><td class="n">27</td><td>Medidores</td><td class="tipo t-tarea">Tarea</td><td class="disc">ELE</td><td class="alc">General</td><td class="feed">ELE troncal</td></tr>
+        <tr class="grouprow"><td colspan="6">GAS</td></tr>
+        <tr><td class="n">28</td><td>Medidores</td><td class="tipo t-tarea">Tarea</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS troncal → Listo</td></tr>
+        <tr><td class="n">29</td><td>Tendidos en áreas comunes</td><td class="tipo t-tarea">Tarea</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS troncal</td></tr>
+        <tr><td class="n">30</td><td>Montantes</td><td class="tipo t-tarea">Tarea</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS troncal</td></tr>
+        <tr><td class="n">31</td><td>Conexiones hasta artefactos</td><td class="tipo t-tarea">Tarea</td><td class="disc">GAS</td><td class="alc">General</td><td class="feed">GAS troncal</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== L5 (PLANTILLA POR NIVEL) ===== -->
+  <div class="lote">
+    <h2>L5 · Coordinación + completitud <span style="font-size:12px;color:#7b4f74;font-weight:600">— PLANTILLA POR NIVEL</span></h2>
+    <div class="ld">Kit viejo «Coord. Inicial/Intermedio/Final». <strong>Este bloque se repite en cada nivel</strong> (Fund, SS, PB, tipo, retiro, azotea). Alcance: Por nivel. <strong>Simplificado: una fila por celda</strong> (disciplina) — el paso a paso operativo vive en los <a href="protocolos-modelado.html" style="color:#1E2A78">protocolos de modelado</a>. Cada 🟨 entregable dispara <em>Documentado</em> (L6).</div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Tarea / Entregable</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr class="grouprow"><td colspan="6">Coordinación (bisagra)</td></tr>
+        <tr><td class="n">1</td><td>Coordinación del nivel: interferencias entre disciplinas y pases críticos resueltos</td><td class="tipo t-tarea">Tarea</td><td class="disc">Coord</td><td class="alc">Por nivel</td><td class="feed">Coordinación nivel → Listo</td></tr>
+        <tr><td class="n">2</td><td>🟨 Plano de interferencias del nivel <strong>(BISAGRA)</strong></td><td class="tipo t-entreg">Entreg.</td><td class="disc">Coord</td><td class="alc">Por nivel</td><td class="feed">Coord → <strong>Documentado</strong> · habilita la completitud</td></tr>
+        <tr class="grouprow"><td colspan="6">Completitud — modelado detallado por celda <span style="font-weight:400;font-style:italic">(el «cómo» está en los protocolos)</span></td></tr>
+        <tr><td class="n">3</td><td>Modelado detallado <strong>ARQ</strong> + albañilería (muros, terminaciones, pisos, cielorrasos)</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por nivel</td><td class="feed">ARQ nivel → Listo · 🟨 planos ARQ → Documentado</td></tr>
+        <tr><td class="n">4</td><td>Carga de parámetros del nivel (desde planilla de materialización)</td><td class="tipo t-tarea">Tarea</td><td class="disc">Parám</td><td class="alc">Por nivel</td><td class="feed">Parám nivel → Listo</td></tr>
+        <tr><td class="n">5</td><td>Modelado detallado <strong>EST</strong> (encofrados, pases, marks)</td><td class="tipo t-tarea">Tarea</td><td class="disc">EST</td><td class="alc">Por nivel</td><td class="feed">EST nivel → Listo · 🟨 replanteo EST → Documentado</td></tr>
+        <tr><td class="n">6</td><td>Modelado detallado <strong>SAN</strong></td><td class="tipo t-tarea">Tarea</td><td class="disc">SAN</td><td class="alc">Por nivel</td><td class="feed">SAN nivel → Listo · 🟨 Plantas Sanitarias → Documentado</td></tr>
+        <tr><td class="n">7</td><td>Modelado detallado <strong>AFC</strong></td><td class="tipo t-tarea">Tarea</td><td class="disc">AFC</td><td class="alc">Por nivel</td><td class="feed">AFC nivel → Listo · 🟨 Plantas Agua → Documentado</td></tr>
+        <tr><td class="n">8</td><td>Modelado detallado <strong>CMA</strong></td><td class="tipo t-tarea">Tarea</td><td class="disc">CMA</td><td class="alc">Por nivel</td><td class="feed">CMA nivel → Listo · 🟨 Plantas Termomecánicas → Documentado</td></tr>
+        <tr><td class="n">9</td><td>Modelado detallado <strong>GAS</strong></td><td class="tipo t-tarea">Tarea</td><td class="disc">GAS</td><td class="alc">Por nivel</td><td class="feed">GAS nivel → Listo · 🟨 Plantas Gas → Documentado</td></tr>
+        <tr><td class="n">10</td><td>Modelado detallado <strong>FPT</strong></td><td class="tipo t-tarea">Tarea</td><td class="disc">FPT</td><td class="alc">Por nivel</td><td class="feed">FPT nivel → Listo · 🟨 Plantas Incendio → Documentado</td></tr>
+        <tr><td class="n">11</td><td>Modelado detallado <strong>ELE / ILU</strong> (incluye bocas en losa)</td><td class="tipo t-tarea">Tarea</td><td class="disc">ELE</td><td class="alc">Por nivel</td><td class="feed">ELE nivel → Listo · 🟨 Plantas Eléctricas → Documentado</td></tr>
+        <tr><td class="n">12</td><td>Modelado detallado <strong>BTE</strong></td><td class="tipo t-tarea">Tarea</td><td class="disc">BTE</td><td class="alc">Por nivel</td><td class="feed">BTE nivel → Listo · 🟨 Plantas Corrientes Débiles → Documentado</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== L6 ===== -->
+  <div class="lote">
+    <h2>L6 · Documentación</h2>
+    <div class="ld">No son tareas nuevas: es la <strong>emisión de los planos</strong> que en L5 figuran como «→ entregable». Cada plano emitido lleva su celda a <em>Documentado</em>; cuando todas las celdas del nivel están documentadas, el nivel cierra y se congela. Por nivel.</div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Plano emitido (por nivel)</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Plano de replanteo EST (encofrados + pases)</td><td class="tipo t-entreg">Entreg.</td><td class="disc">EST</td><td class="alc">Por nivel</td><td class="feed">EST → Documentado</td></tr>
+        <tr><td class="n">2</td><td>Plantas Sanitarias · Agua · Termomecánicas · Gas · Incendio · Eléctricas · Corrientes débiles</td><td class="tipo t-entreg">Entreg.</td><td class="disc">MEP</td><td class="alc">Por nivel</td><td class="feed">cada sistema → Documentado</td></tr>
+        <tr><td class="n">3</td><td>Planos ARQ de albañilería: replanteo, revestimientos, pisos y zócalos, cielorrasos</td><td class="tipo t-entreg">Entreg.</td><td class="disc">ARQ</td><td class="alc">Por nivel</td><td class="feed">ARQ → Documentado</td></tr>
+        <tr><td class="n">—</td><td>Nivel con TODAS las celdas documentadas → <strong>Nivel cerrado (se congela)</strong></td><td class="tipo t-entreg">Cierre</td><td class="disc">—</td><td class="alc">Por nivel</td><td class="feed">emergente · cambio posterior = extra-contractual</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== L7 ===== -->
+  <div class="lote">
+    <h2>L7 · Locales <span style="font-size:12px;color:#3f6e2a;font-weight:600">— paralelo</span></h2>
+    <div class="ld">Kit «L7 Locales». Cuelga de la ARQ detallada (L2), corre en paralelo y realimenta la completitud (L5). Alcance: por tipología de local (baños, cocinas, etc.).</div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Tarea</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr class="grouprow"><td colspan="6">ARQ · Inputs</td></tr>
+        <tr><td class="n">1</td><td>Checklist detalles de locales</td><td class="tipo t-input">Input</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">precondición</td></tr>
+        <tr><td class="n">2</td><td>Proyecto de arquitectura base modelado (CONT-RE / CONT-TE)</td><td class="tipo t-input">Input</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">precondición</td></tr>
+        <tr class="grouprow"><td colspan="6">ARQ · Tareas internas</td></tr>
+        <tr><td class="n">3</td><td>Tipificar baños y cocinas que se repiten</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">realimenta completitud L5</td></tr>
+        <tr><td class="n">4</td><td>[COCINAS] Modular muebles, espacio para heladera</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">5</td><td>[COCINAS] Alturas de mesada, alzada, alacenas</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">6</td><td>[COCINAS] Extractores, bachas, griferías, anafes/hornos</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5 · liga CMA/SAN</td></tr>
+        <tr><td class="n">7</td><td>[COCINAS] Mesadas, banquinas</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">8</td><td>[COCINAS] ¿Zócalo en mesada?</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">9</td><td>[COCINAS] Alineación SAN / AGUA / ELE</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5 · coordina MEP</td></tr>
+        <tr><td class="n">10</td><td>[BAÑOS] Tipo de artefacto, ubicación, separación inodoro-bidet</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">11</td><td>[BAÑOS] Modelar ducha, verificar desagüe, griferías</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5 · liga SAN</td></tr>
+        <tr><td class="n">12</td><td>[BAÑOS] Mesada, bacha, grifería, mueble, espejo</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">13</td><td>[BAÑOS] Revestimientos, altura</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">14</td><td>[BAÑOS] Cielorrasos</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5</td></tr>
+        <tr><td class="n">15</td><td>[BAÑOS] Tendido de agua, llaves, descargas, PPA, puntos eléctricos</td><td class="tipo t-tarea">Tarea</td><td class="disc">ARQ</td><td class="alc">Por tipología</td><td class="feed">→ L5 · liga SAN/AFC/ELE</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== L8 ===== -->
+  <div class="lote">
+    <h2>L8 · Detalles <span style="font-size:12px;color:#3f6e2a;font-weight:600">— paralelo</span></h2>
+    <div class="ld">Kit «L8 Detalles». Carpinterías: las planillas son entregables (outputs) que salen del modelo con parámetros. Paralelo, cuelga de la ARQ detallada (L2).</div>
+    <table>
+      <thead><tr><th class="n">#</th><th>Planilla / Entregable</th><th>Tipo</th><th>Disc.</th><th>Alcance</th><th>Alimenta</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Planilla de carpinterías — Ventanas</td><td class="tipo t-entreg">Output</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">plano+planilla ventanas · liga cuantif.</td></tr>
+        <tr><td class="n">2</td><td>Planilla de carpinterías — Puertas</td><td class="tipo t-entreg">Output</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">plano+planilla puertas</td></tr>
+        <tr><td class="n">3</td><td>Planilla de Herrerías / Barandas / Divisores</td><td class="tipo t-entreg">Output</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">plano herrerías</td></tr>
+        <tr><td class="n">4</td><td>Planilla de Frentes de Placard</td><td class="tipo t-entreg">Output</td><td class="disc">ARQ</td><td class="alc">General</td><td class="feed">plano placares</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="doc">Ctrl.S · reforma de lotes + matriz de modelado · lista de tareas maestra (L1–L8)</footer>
+</div>
